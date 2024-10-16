@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { TurmaRepository } from './turma.repository';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
@@ -19,8 +19,12 @@ export class TurmaController {
 
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de turmas.', type: [Turma] })
-  async findAll(): Promise<Turma[]> {
-    return this.turmaRepository.findAll();
+  async findAll(
+    @Query('professor_id') professor_id?: string,
+    @Query('disciplina_id') disciplina_id?: string,
+    @Query('periodo') periodo?: string, // String no formato "YYYY-MM-DD"
+  ): Promise<Turma[]> {
+    return this.turmaRepository.findAll(professor_id, disciplina_id, periodo);
   }
 
   @Get(':id')

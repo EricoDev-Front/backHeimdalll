@@ -17,9 +17,24 @@ export class TurmaRepository {
     return this.turmaRepository.save(newTurma);
   }
 
-  async findAll(): Promise<Turma[]> {
-    return this.turmaRepository.find();
+  async findAll(professor_id?: string, disciplina_id?: string, periodo?: string): Promise<Turma[]> {
+    const query = this.turmaRepository.createQueryBuilder('turma');
+
+    if (professor_id) {
+      query.andWhere('turma.professor_id = :professor_id', { professor_id });
+    }
+
+    if (disciplina_id) {
+      query.andWhere('turma.disciplina_id = :disciplina_id', { disciplina_id });
+    }
+
+    if (periodo) {
+      query.andWhere('DATE(turma.periodo) = :periodo', { periodo });
+    }
+
+    return query.getMany();
   }
+
 
   async findOne(id: string): Promise<Turma> {
     return this.turmaRepository.findOne({ where: { turma_id: id } });
@@ -34,3 +49,4 @@ export class TurmaRepository {
     await this.turmaRepository.delete(id);
   }
 }
+

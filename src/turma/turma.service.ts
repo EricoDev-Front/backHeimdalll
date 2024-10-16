@@ -12,8 +12,8 @@ export class TurmaService {
     return this.turmaRepository.createTurma(createTurmaDto);
   }
 
-  findAll(): Promise<Turma[]> {
-    return this.turmaRepository.findAll();
+  findAll(professor_id?: string, disciplina_id?: string, periodo?: string): Promise<Turma[]> {
+    return this.turmaRepository.findAll(professor_id, disciplina_id, periodo);
   }
 
   findOne(id: string): Promise<Turma> {
@@ -28,3 +28,4 @@ export class TurmaService {
     return this.turmaRepository.remove(id);
   }
 }
+
