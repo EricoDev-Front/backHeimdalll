@@ -3,11 +3,6 @@ import { IsNotEmpty, IsString, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateValidacaoDto {
-  @ApiProperty({ description: 'ID da validação' })
-  @IsString()
-  @IsNotEmpty()
-  valida_id: string;
-
   @ApiProperty({ description: 'ID do professor associado à validação' })
   @IsString()
   @IsNotEmpty()

@@ -3,11 +3,6 @@ import { IsNotEmpty, IsString, IsInt } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAlunoDto {
-  @ApiProperty({ description: 'ID do aluno' })
-  @IsString()
-  @IsNotEmpty()
-  aluno_id: string;
-
   @ApiProperty({ description: 'Nome do aluno' })
   @IsString()
   @IsNotEmpty()

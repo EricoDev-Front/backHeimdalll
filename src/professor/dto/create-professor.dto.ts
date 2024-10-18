@@ -3,11 +3,6 @@ import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProfessorDto {
-  @ApiProperty({ description: 'ID do professor' })
-  @IsString()
-  @IsNotEmpty()
-  professor_id: string;
-
   @ApiProperty({ description: 'Nome do professor' })
   @IsString()
   @IsNotEmpty()

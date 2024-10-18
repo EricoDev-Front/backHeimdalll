@@ -3,11 +3,6 @@ import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTurmaDto {
-  @ApiProperty({ description: 'ID da turma' })
-  @IsString()
-  @IsNotEmpty()
-  turma_id: string;
-
   @ApiProperty({ description: 'ID do professor associado à turma' })
   @IsString()
   @IsNotEmpty()

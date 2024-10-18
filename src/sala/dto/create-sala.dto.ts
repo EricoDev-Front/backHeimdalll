@@ -3,11 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsInt } from 'class-validator';
 
 export class CreateSalaDto {
-  @ApiProperty({ description: 'ID da sala' })
-  @IsString()
-  @IsNotEmpty()
-  sala_id: string;
-
   @ApiProperty({ description: 'Status da sala' })
   @IsBoolean()
   status: boolean;
