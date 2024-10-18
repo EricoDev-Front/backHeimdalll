@@ -10,13 +10,13 @@ export class Validacao {
   valida_id: string;
 
   @ManyToOne(() => Professor, (professor) => professor.professor_id)
-  professor_id: string;
+  professor_id: number;
 
   @ManyToOne(() => Sala, (sala) => sala.sala_id)
-  sala_id: string;
+  sala_id: number;
 
   @ManyToOne(() => Reserva, (reserva) => reserva.reserva_id)
-  reserva_id: string;
+  reserva_id: number;
 
   @Column()
   status: boolean;

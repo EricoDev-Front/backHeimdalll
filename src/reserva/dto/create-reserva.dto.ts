@@ -6,12 +6,12 @@ export class CreateReservaDto {
   @ApiProperty({ description: 'ID do professor associado à reserva' })
   @IsString()
   @IsNotEmpty()
-  professor_id: string;
+  professor_id: number;
 
   @ApiProperty({ description: 'ID da sala associada à reserva' })
   @IsString()
   @IsNotEmpty()
-  sala_id: string;
+  sala_id: number;
 
   @ApiProperty({ description: 'Status da reserva' })
   @IsBoolean()

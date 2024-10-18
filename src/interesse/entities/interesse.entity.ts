@@ -9,8 +9,8 @@ export class Interesse {
   interesse_id: string;
 
   @ManyToOne(() => Aluno, (aluno) => aluno.aluno_id)
-  aluno_id: string;
+  aluno_id: number;
 
   @ManyToOne(() => Turma, (turma) => turma.turma_id)
-  turma_id: string;
+  turma_id: number;
 }

@@ -10,13 +10,13 @@ export class Turma {
   turma_id: string;
 
   @ManyToOne(() => Professor, (professor) => professor.professor_id)
-  professor_id: string;
+  professor_id: number;
 
   @ManyToOne(() => Aluno, (aluno) => aluno.aluno_id)
-  aluno_id: string;
+  aluno_id: number;
 
   @ManyToOne(() => Disciplina, (disciplina) => disciplina.disciplina_id)
-  disciplina_id: string;
+  disciplina_id: number;
 
   @Column()
   periodo: Date;

@@ -6,17 +6,17 @@ export class CreateValidacaoDto {
   @ApiProperty({ description: 'ID do professor associado à validação' })
   @IsString()
   @IsNotEmpty()
-  professor_id: string;
+  professor_id: number;
 
   @ApiProperty({ description: 'ID da sala associada à validação' })
   @IsString()
   @IsNotEmpty()
-  sala_id: string;
+  sala_id: number;
 
   @ApiProperty({ description: 'ID da reserva associada à validação' })
   @IsString()
   @IsNotEmpty()
-  reserva_id: string;
+  reserva_id: number;
 
   @ApiProperty({ description: 'Status da validação' })
   @IsBoolean()
