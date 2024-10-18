@@ -24,7 +24,7 @@ import { AlunoModule } from './aluno/aluno.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'heimdalldb.mysql.database.azure.com',
       port: 3306,
       username: 'heimdall',
       password: 'Paladino123',
