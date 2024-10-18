@@ -39,6 +39,8 @@ CREATE TABLE Curso (
     curso_id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(50) NOT NULL,
     descricao VARCHAR(300),
+    disciplina_id INT NOT NULL,
+    FOREIGN KEY (disciplina_id) REFERENCES Disciplina(disciplina_id)
 );
 
 CREATE TABLE Reserva (
