@@ -4,10 +4,14 @@ import { ReservaController } from './reserva.controller';
 import { ReservaRepository } from './reserva.repository';
 import { Reserva } from './entities/reserva.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Turma } from 'src/turma/entities/turma.entity';
+import { TurmaRepository } from 'src/turma/turma.repository';
+import { Professor } from 'src/professor/entities/professor.entity';
+import { Sala } from 'src/sala/entities/sala.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reserva])],
+  imports: [TypeOrmModule.forFeature([Reserva, Turma, Professor, Sala])],
   controllers: [ReservaController],
-  providers: [ReservaService, ReservaRepository],
+  providers: [ReservaService, ReservaRepository, TurmaRepository],
 })
 export class ReservaModule {}

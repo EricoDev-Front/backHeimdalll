@@ -1,8 +1,8 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ReservaRepository } from './reserva.repository';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Reserva } from './entities/reserva.entity';
 
 @ApiTags('reservas')
@@ -18,10 +18,19 @@ export class ReservaController {
   }
 
   @Get()
-  @ApiResponse({ status: 200, description: 'Lista de reservas.', type: [Reserva] })
-  async findAll(): Promise<Reserva[]> {
-    return this.reservaRepository.findAll();
+  @ApiQuery({ name: 'professorId', required: false, type: Number, description: 'ID do professor para filtrar as reservas' })
+  @ApiQuery({ name: 'salaId', required: false, type: Number, description: 'ID da sala para filtrar as reservas' })
+  @ApiQuery({ name: 'turmaId', required: false, type: Number, description: 'ID da turma para filtrar as reservas' })
+  @ApiResponse({ status: 200, description: 'Reservas encontradas', type: [Reserva] })
+  @ApiResponse({ status: 404, description: 'Nenhuma reserva encontrada' })
+  async getReservas(
+    @Query('professorId') professorId?: number,
+    @Query('salaId') salaId?: number,
+    @Query('turmaId') turmaId?: number,
+  ): Promise<Reserva[]> {
+    return this.reservaRepository.findReservas(professorId, salaId, turmaId);
   }
+
 
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Reserva encontrada.', type: Reserva })

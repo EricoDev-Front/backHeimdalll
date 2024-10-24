@@ -1,31 +1,24 @@
-import { IsNotEmpty, IsNumber, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateReservaDto {
+export class ReservaResponseDto {
+  @ApiProperty({ description: 'ID da reserva' })
+  reserva_id: number;
+
   @ApiProperty({ description: 'ID do professor associado à reserva' })
-  @IsNumber()
-  @IsNotEmpty()
   professor_id: number;
 
   @ApiProperty({ description: 'ID da sala associada à reserva' })
-  @IsNumber()
-  @IsNotEmpty()
   sala_id: number;
-  
+
   @ApiProperty({ description: 'ID da turma associada à reserva' })
-  @IsNumber()
-  @IsNotEmpty()
   turma_id: number;
 
   @ApiProperty({ description: 'Status da reserva' })
-  @IsBoolean()
   status: boolean;
 
   @ApiProperty({ description: 'Data e hora de início da reserva', type: Date })
-  @IsNotEmpty()
   data_hora_inicio: Date;
 
   @ApiProperty({ description: 'Data e hora de final da reserva', type: Date })
-  @IsNotEmpty()
   data_hora_final: Date;
 }
