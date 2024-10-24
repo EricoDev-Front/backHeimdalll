@@ -2,8 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { ValidacaoRepository } from './validacao.repository';
 import { CreateValidacaoDto } from './dto/create-validacao.dto';
 import { UpdateValidacaoDto } from './dto/update-validacao.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Validacao } from './entities/validacao.entity';
+import { ToggleValidacaoDto } from './dto/toggle-reserva.dto';
 
 @ApiTags('validacoes')
 @Controller('validacao')
@@ -16,6 +17,19 @@ export class ValidacaoController {
   async create(@Body() createValidacaoDto: CreateValidacaoDto): Promise<Validacao> {
     return this.validacaoRepository.createValidacao(createValidacaoDto);
   }
+
+  @Post('toggle')
+  @ApiOperation({ summary: 'Alternar a validação de várias reservas' })
+  @ApiBody({
+    description: 'Lista de objetos contendo reservaId e status para alternar a validação',
+    type: [ToggleValidacaoDto],
+  })
+  @ApiResponse({ status: 200, description: 'Validações alternadas com sucesso.' })
+  @ApiResponse({ status: 404, description: 'Uma ou mais reservas ou validações não encontradas.' })
+  async toggleValidacao(@Body() toggleValidacaoDtos: ToggleValidacaoDto[]): Promise<string[]> {
+    return this.validacaoRepository.toggleValidacaoByReservaIds(toggleValidacaoDtos);
+  }
+
 
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de validações.', type: [Validacao] })

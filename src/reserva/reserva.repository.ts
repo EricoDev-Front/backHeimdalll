@@ -7,6 +7,8 @@ import { UpdateReservaDto } from './dto/update-reserva.dto';
 import { Turma } from 'src/turma/entities/turma.entity';
 import { Professor } from 'src/professor/entities/professor.entity';
 import { Sala } from 'src/sala/entities/sala.entity';
+import { Validacao } from 'src/validacao/entities/validacao.entity';
+import { CreateValidacaoDto } from 'src/validacao/dto/create-validacao.dto';
 
 @Injectable()
 export class ReservaRepository {
@@ -21,6 +23,9 @@ export class ReservaRepository {
     
     @InjectRepository(Turma)
     private readonly turmaRepository: Repository<Turma>,
+    
+    @InjectRepository(Validacao)
+    private readonly validacaoRepository: Repository<Validacao>,
   ) {}
 
   async createReserva(createReservaDto: CreateReservaDto): Promise<Reserva> {
@@ -44,13 +49,29 @@ export class ReservaRepository {
       professor: professor,
       sala: sala,
       turma: turma,
-      status: createReservaDto.status,
+      status: false, // status da reserva
       data_hora_inicio: createReservaDto.data_hora_inicio,
       data_hora_final: createReservaDto.data_hora_final,
     });
   
-    return this.reservaRepository.save(reserva);
+    // Salvar a reserva
+    const savedReserva = await this.reservaRepository.save(reserva);
+  
+    // Criar a validação usando os dados da reserva
+    const validacaoDto = new CreateValidacaoDto();
+    validacaoDto.professor_id = professor.professor_id; // ou a forma correta de acessar o ID do professor
+    validacaoDto.sala_id = sala.sala_id; // ou a forma correta de acessar o ID da sala
+    validacaoDto.reserva_id = savedReserva.reserva_id; // ID da reserva recém-criada
+    validacaoDto.status = false; // ou outro valor que você queira definir
+    validacaoDto.data_hora_inicio = createReservaDto.data_hora_inicio; // pode ser ajustado conforme necessário
+    validacaoDto.data_hora_final = createReservaDto.data_hora_final; // pode ser ajustado conforme necessário
+  
+    // Salvar a validação
+    await this.validacaoRepository.save(validacaoDto);
+  
+    return savedReserva;
   }
+  
 
   async findReservas(
     professorId?: number,
@@ -58,26 +79,30 @@ export class ReservaRepository {
     turmaId?: number,
   ): Promise<Reserva[]> {
     const queryBuilder = this.reservaRepository.createQueryBuilder('reserva');
-
+  
+    // Filtra apenas reservas com status true
+    queryBuilder.andWhere('reserva.status = :status', { status: true });
+  
     if (professorId) {
       queryBuilder.andWhere('reserva.professor = :professorId', { professorId });
     }
-
+  
     if (salaId) {
       queryBuilder.andWhere('reserva.sala = :salaId', { salaId });
     }
-
+  
     if (turmaId) {
       queryBuilder.andWhere('reserva.turma = :turmaId', { turmaId });
     }
-
+  
     // Adiciona as relações necessárias
     queryBuilder.leftJoinAndSelect('reserva.professor', 'professor');
     queryBuilder.leftJoinAndSelect('reserva.sala', 'sala');
     queryBuilder.leftJoinAndSelect('reserva.turma', 'turma');
-
+  
     return await queryBuilder.getMany();
   }
+  
 
   async findAll(): Promise<Reserva[]> {
     return this.reservaRepository.find();
