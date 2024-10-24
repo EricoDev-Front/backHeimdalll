@@ -16,15 +16,15 @@ export class InteresseService {
     return this.interesseRepository.findAll();
   }
 
-  findOne(id: string): Promise<Interesse> {
+  findOne(id: number): Promise<Interesse> {
     return this.interesseRepository.findOne(id);
   }
 
-  update(id: string, updateInteresseDto: UpdateInteresseDto): Promise<Interesse> {
+  update(id: number, updateInteresseDto: UpdateInteresseDto): Promise<Interesse> {
     return this.interesseRepository.update(id, updateInteresseDto);
   }
 
-  remove(id: string): Promise<void> {
+  remove(id: number): Promise<void> {
     return this.interesseRepository.remove(id);
   }
 }

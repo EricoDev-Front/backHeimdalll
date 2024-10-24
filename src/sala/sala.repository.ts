@@ -21,16 +21,16 @@ export class SalaRepository {
     return this.salaRepository.find();
   }
 
-  findOne(id: string): Promise<Sala> {
+  findOne(id: number): Promise<Sala> {
     return this.salaRepository.findOne({ where: { sala_id: id } });
   }
 
-  async update(id: string, updateSalaDto: UpdateSalaDto): Promise<Sala> {
+  async update(id: number, updateSalaDto: UpdateSalaDto): Promise<Sala> {
     await this.salaRepository.update(id, updateSalaDto);
     return this.findOne(id);
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: number): Promise<void> {
     await this.salaRepository.delete(id);
   }
 }

@@ -1,15 +1,14 @@
-// create-reserva.dto.ts
-import { IsNotEmpty, IsString, IsBoolean } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateReservaDto {
   @ApiProperty({ description: 'ID do professor associado à reserva' })
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   professor_id: number;
 
   @ApiProperty({ description: 'ID da sala associada à reserva' })
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   sala_id: number;
 

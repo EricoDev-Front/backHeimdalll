@@ -21,16 +21,16 @@ export class ReservaRepository {
     return this.reservaRepository.find();
   }
 
-  async findOne(id: string): Promise<Reserva> {
+  async findOne(id: number): Promise<Reserva> {
     return this.reservaRepository.findOne({ where: { reserva_id: id } });
   }
 
-  async update(id: string, updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+  async update(id: number, updateReservaDto: UpdateReservaDto): Promise<Reserva> {
     await this.reservaRepository.update(id, updateReservaDto);
     return this.findOne(id);
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: number): Promise<void> {
     await this.reservaRepository.delete(id);
   }
 }

@@ -16,15 +16,15 @@ export class CursoService {
     return this.cursoRepository.findAll();
   }
 
-  findOne(id: string): Promise<Curso> {
+  findOne(id: number): Promise<Curso> {
     return this.cursoRepository.findOne(id);
   }
 
-  update(id: string, updateCursoDto: UpdateCursoDto): Promise<Curso> {
+  update(id: number, updateCursoDto: UpdateCursoDto): Promise<Curso> {
     return this.cursoRepository.update(id, updateCursoDto);
   }
 
-  remove(id: string): Promise<void> {
+  remove(id: number): Promise<void> {
     return this.cursoRepository.remove(id);
   }
 }

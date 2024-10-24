@@ -9,5 +9,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
   imports: [TypeOrmModule.forFeature([Aluno])],
   controllers: [AlunoController],
   providers: [AlunoService, AlunoRepository],
+  exports: [TypeOrmModule],
 })
 export class AlunoModule {}

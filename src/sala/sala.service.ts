@@ -16,15 +16,15 @@ export class SalaService {
     return this.salaRepository.findAll();
   }
 
-  findOne(id: string): Promise<Sala> {
+  findOne(id: number): Promise<Sala> {
     return this.salaRepository.findOne(id);
   }
 
-  update(id: string, updateSalaDto: UpdateSalaDto): Promise<Sala> {
+  update(id: number, updateSalaDto: UpdateSalaDto): Promise<Sala> {
     return this.salaRepository.update(id, updateSalaDto);
   }
 
-  remove(id: string): Promise<void> {
+  remove(id: number): Promise<void> {
     return this.salaRepository.remove(id);
   }
 }

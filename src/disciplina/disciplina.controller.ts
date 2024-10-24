@@ -26,21 +26,21 @@ export class DisciplinaController {
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Disciplina encontrada.', type: Disciplina })
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })
-  async findOne(@Param('id') id: string): Promise<Disciplina> {
+  async findOne(@Param('id') id: number): Promise<Disciplina> {
     return this.disciplinaRepository.findOne(id);
   }
 
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Disciplina atualizada com sucesso.', type: Disciplina })
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })
-  async update(@Param('id') id: string, @Body() updateDisciplinaDto: UpdateDisciplinaDto): Promise<Disciplina> {
+  async update(@Param('id') id: number, @Body() updateDisciplinaDto: UpdateDisciplinaDto): Promise<Disciplina> {
     return this.disciplinaRepository.update(id, updateDisciplinaDto);
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Disciplina deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return this.disciplinaRepository.remove(id);
   }
 }

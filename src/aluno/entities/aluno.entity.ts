@@ -1,10 +1,9 @@
-// aluno.entity.ts
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Aluno {
-  @PrimaryColumn()
-  aluno_id: string;
+  @PrimaryGeneratedColumn() // ID gerado automaticamente
+  aluno_id: number;
 
   @Column()
   nome: string;

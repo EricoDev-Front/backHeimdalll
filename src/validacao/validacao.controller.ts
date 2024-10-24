@@ -26,21 +26,21 @@ export class ValidacaoController {
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Validação encontrada.', type: Validacao })
   @ApiResponse({ status: 404, description: 'Validação não encontrada.' })
-  async findOne(@Param('id') id: string): Promise<Validacao> {
+  async findOne(@Param('id') id: number): Promise<Validacao> {
     return this.validacaoRepository.findOne(id);
   }
 
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Validação atualizada com sucesso.', type: Validacao })
   @ApiResponse({ status: 404, description: 'Validação não encontrada.' })
-  async update(@Param('id') id: string, @Body() updateValidacaoDto: UpdateValidacaoDto): Promise<Validacao> {
+  async update(@Param('id') id: number, @Body() updateValidacaoDto: UpdateValidacaoDto): Promise<Validacao> {
     return this.validacaoRepository.update(id, updateValidacaoDto);
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Validação deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Validação não encontrada.' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return this.validacaoRepository.remove(id);
   }
 }

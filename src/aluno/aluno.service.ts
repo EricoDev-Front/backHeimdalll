@@ -16,15 +16,15 @@ export class AlunoService {
     return this.alunoRepository.findAll();
   }
 
-  findOne(id: string): Promise<Aluno> {
+  findOne(id: number): Promise<Aluno> {
     return this.alunoRepository.findOne(id);
   }
 
-  update(id: string, updateAlunoDto: UpdateAlunoDto): Promise<Aluno> {
+  update(id: number, updateAlunoDto: UpdateAlunoDto): Promise<Aluno> {
     return this.alunoRepository.update(id, updateAlunoDto);
   }
 
-  remove(id: string): Promise<void> {
+  remove(id: number): Promise<void> {
     return this.alunoRepository.remove(id);
   }
 }

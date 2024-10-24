@@ -26,21 +26,21 @@ export class ProfessorController {
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Professor encontrado.', type: Professor })
   @ApiResponse({ status: 404, description: 'Professor não encontrado.' })
-  async findOne(@Param('id') id: string): Promise<Professor> {
+  async findOne(@Param('id') id: number): Promise<Professor> {
     return this.professorRepository.findOne(id);
   }
 
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Professor atualizado com sucesso.', type: Professor })
   @ApiResponse({ status: 404, description: 'Professor não encontrado.' })
-  async update(@Param('id') id: string, @Body() updateProfessorDto: UpdateProfessorDto): Promise<Professor> {
+  async update(@Param('id') id: number, @Body() updateProfessorDto: UpdateProfessorDto): Promise<Professor> {
     return this.professorRepository.update(id, updateProfessorDto);
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Professor deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Professor não encontrado.' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return this.professorRepository.remove(id);
   }
 }

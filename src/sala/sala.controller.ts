@@ -26,21 +26,21 @@ export class SalaController {
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Sala encontrada.', type: Sala })
   @ApiResponse({ status: 404, description: 'Sala não encontrada.' })
-  async findOne(@Param('id') id: string): Promise<Sala> {
+  async findOne(@Param('id') id: number): Promise<Sala> {
     return await this.salaService.findOne(id); // Retorna a sala encontrada
   }
 
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Sala atualizada com sucesso.', type: Sala })
   @ApiResponse({ status: 404, description: 'Sala não encontrada.' })
-  async update(@Param('id') id: string, @Body() updateSalaDto: UpdateSalaDto): Promise<Sala> {
+  async update(@Param('id') id: number, @Body() updateSalaDto: UpdateSalaDto): Promise<Sala> {
     return await this.salaService.update(id, updateSalaDto); // Retorna a sala atualizada
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Sala deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Sala não encontrada.' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return await this.salaService.remove(id); // Remove a sala
   }
 }

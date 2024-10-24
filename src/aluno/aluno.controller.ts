@@ -26,21 +26,21 @@ export class AlunoController {
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Aluno encontrado.', type: Aluno })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
-  async findOne(@Param('id') id: string): Promise<Aluno> {
+  async findOne(@Param('id') id: number): Promise<Aluno> {
     return this.alunoRepository.findOne(id);
   }
 
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Aluno atualizado com sucesso.', type: Aluno })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
-  async update(@Param('id') id: string, @Body() updateAlunoDto: UpdateAlunoDto): Promise<Aluno> {
+  async update(@Param('id') id: number, @Body() updateAlunoDto: UpdateAlunoDto): Promise<Aluno> {
     return this.alunoRepository.update(id, updateAlunoDto);
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Aluno deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return this.alunoRepository.remove(id);
   }
 }

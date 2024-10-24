@@ -1,10 +1,9 @@
-// sala.entity.ts
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
 @Entity()
 export class Sala {
-  @PrimaryColumn()
-  sala_id: string;
+  @PrimaryGeneratedColumn() // ID gerado automaticamente como número
+  sala_id: number;
 
   @Column()
   status: boolean;

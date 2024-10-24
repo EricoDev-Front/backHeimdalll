@@ -16,15 +16,15 @@ export class TurmaService {
     return this.turmaRepository.findAll(professor_id, disciplina_id, periodo);
   }
 
-  findOne(id: string): Promise<Turma> {
+  findOne(id: number): Promise<Turma> {
     return this.turmaRepository.findOne(id);
   }
 
-  update(id: string, updateTurmaDto: UpdateTurmaDto): Promise<Turma> {
+  update(id: number, updateTurmaDto: UpdateTurmaDto): Promise<Turma> {
     return this.turmaRepository.update(id, updateTurmaDto);
   }
 
-  remove(id: string): Promise<void> {
+  remove(id: number): Promise<void> {
     return this.turmaRepository.remove(id);
   }
 }

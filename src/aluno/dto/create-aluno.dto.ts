@@ -1,4 +1,3 @@
-// create-aluno.dto.ts
 import { IsNotEmpty, IsString, IsInt } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 

@@ -16,15 +16,15 @@ export class ProfessorService {
     return this.professorRepository.findAll();
   }
 
-  findOne(id: string): Promise<Professor> {
+  findOne(id: number): Promise<Professor> {
     return this.professorRepository.findOne(id);
   }
 
-  update(id: string, updateProfessorDto: UpdateProfessorDto): Promise<Professor> {
+  update(id: number, updateProfessorDto: UpdateProfessorDto): Promise<Professor> {
     return this.professorRepository.update(id, updateProfessorDto);
   }
 
-  remove(id: string): Promise<void> {
+  remove(id: number): Promise<void> {
     return this.professorRepository.remove(id);
   }
 }

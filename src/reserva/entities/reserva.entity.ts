@@ -1,18 +1,17 @@
-// reserva.entity.ts
 import { Professor } from 'src/professor/entities/professor.entity';
 import { Sala } from 'src/sala/entities/sala.entity';
-import { Entity, PrimaryColumn, Column, ManyToOne, IntegerType } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Reserva {
-  @PrimaryColumn()
-  reserva_id: string;
+  @PrimaryGeneratedColumn() // Gera automaticamente um ID numérico
+  reserva_id: number;
 
   @ManyToOne(() => Professor, (professor) => professor.professor_id)
-  professor_id: number;
+  professor: Professor;
 
   @ManyToOne(() => Sala, (sala) => sala.sala_id)
-  sala_id: number;
+  sala: Sala;
 
   @Column()
   status: boolean;

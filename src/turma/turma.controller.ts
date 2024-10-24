@@ -30,21 +30,21 @@ export class TurmaController {
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Turma encontrada.', type: Turma })
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
-  async findOne(@Param('id') id: string): Promise<Turma> {
+  async findOne(@Param('id') id: number): Promise<Turma> {
     return this.turmaRepository.findOne(id);
   }
 
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Turma atualizada com sucesso.', type: Turma })
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
-  async update(@Param('id') id: string, @Body() updateTurmaDto: UpdateTurmaDto): Promise<Turma> {
+  async update(@Param('id') id: number, @Body() updateTurmaDto: UpdateTurmaDto): Promise<Turma> {
     return this.turmaRepository.update(id, updateTurmaDto);
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Turma deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return this.turmaRepository.remove(id);
   }
 }

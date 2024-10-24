@@ -1,16 +1,15 @@
-// interesse.entity.ts
 import { Aluno } from 'src/aluno/entities/aluno.entity';
 import { Turma } from 'src/turma/entities/turma.entity';
-import { Entity, PrimaryColumn, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Interesse {
-  @PrimaryColumn()
-  interesse_id: string;
+  @PrimaryGeneratedColumn() // ID gerado automaticamente como numérico
+  interesse_id: number;
 
   @ManyToOne(() => Aluno, (aluno) => aluno.aluno_id)
-  aluno_id: number;
+  aluno: Aluno;
 
   @ManyToOne(() => Turma, (turma) => turma.turma_id)
-  turma_id: number;
+  turma: Turma;
 }

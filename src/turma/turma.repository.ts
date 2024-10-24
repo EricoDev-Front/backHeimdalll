@@ -36,16 +36,16 @@ export class TurmaRepository {
   }
 
 
-  async findOne(id: string): Promise<Turma> {
+  async findOne(id: number): Promise<Turma> {
     return this.turmaRepository.findOne({ where: { turma_id: id } });
   }
 
-  async update(id: string, updateTurmaDto: UpdateTurmaDto): Promise<Turma> {
+  async update(id: number, updateTurmaDto: UpdateTurmaDto): Promise<Turma> {
     await this.turmaRepository.update(id, updateTurmaDto);
     return this.findOne(id);
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: number): Promise<void> {
     await this.turmaRepository.delete(id);
   }
 }

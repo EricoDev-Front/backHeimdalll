@@ -16,15 +16,15 @@ export class ReservaService {
     return this.reservaRepository.findAll();
   }
 
-  findOne(id: string): Promise<Reserva> {
+  findOne(id: number): Promise<Reserva> {
     return this.reservaRepository.findOne(id);
   }
 
-  update(id: string, updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+  update(id: number, updateReservaDto: UpdateReservaDto): Promise<Reserva> {
     return this.reservaRepository.update(id, updateReservaDto);
   }
 
-  remove(id: string): Promise<void> {
+  remove(id: number): Promise<void> {
     return this.reservaRepository.remove(id);
   }
 }

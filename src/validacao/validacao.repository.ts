@@ -21,16 +21,16 @@ export class ValidacaoRepository {
     return this.validacaoRepository.find();
   }
 
-  async findOne(id: string): Promise<Validacao> {
+  async findOne(id: number): Promise<Validacao> {
     return this.validacaoRepository.findOne({ where: { valida_id: id } });
   }
 
-  async update(id: string, updateValidacaoDto: UpdateValidacaoDto): Promise<Validacao> {
+  async update(id: number, updateValidacaoDto: UpdateValidacaoDto): Promise<Validacao> {
     await this.validacaoRepository.update(id, updateValidacaoDto);
     return this.findOne(id);
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: number): Promise<void> {
     await this.validacaoRepository.delete(id);
   }
 }

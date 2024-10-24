@@ -1,20 +1,19 @@
-// create-turma.dto.ts
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTurmaDto {
   @ApiProperty({ description: 'ID do professor associado à turma' })
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   professor_id: number;
 
   @ApiProperty({ description: 'ID do aluno associado à turma' })
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   aluno_id: number;
 
   @ApiProperty({ description: 'ID da disciplina associada à turma' })
-  @IsString()
+  @IsNumber()
   @IsNotEmpty()
   disciplina_id: number;
 

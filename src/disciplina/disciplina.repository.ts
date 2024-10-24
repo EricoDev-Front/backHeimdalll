@@ -21,16 +21,16 @@ export class DisciplinaRepository {
     return this.disciplinaRepository.find();
   }
 
-  async findOne(id: string): Promise<Disciplina> {
+  async findOne(id: number): Promise<Disciplina> {
     return this.disciplinaRepository.findOne({ where: { disciplina_id: id } });
   }
 
-  async update(id: string, updateDisciplinaDto: UpdateDisciplinaDto): Promise<Disciplina> {
+  async update(id: number, updateDisciplinaDto: UpdateDisciplinaDto): Promise<Disciplina> {
     await this.disciplinaRepository.update(id, updateDisciplinaDto);
     return this.findOne(id);
   }
 
-  async remove(id: string): Promise<void> {
+  async remove(id: number): Promise<void> {
     await this.disciplinaRepository.delete(id);
   }
 }

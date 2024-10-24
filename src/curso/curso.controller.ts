@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { CursoRepository } from './curso.repository';
-import { CreateCursoDto } from './dto/create-curso.dto';
 import { UpdateCursoDto } from './dto/update-curso.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Curso } from './entities/curso.entity';
+import { CreateCursoDto } from './dto/create-curso.dto';
 
 @ApiTags('cursos')
 @Controller('curso')
@@ -26,21 +26,21 @@ export class CursoController {
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Curso encontrado.', type: Curso })
   @ApiResponse({ status: 404, description: 'Curso não encontrado.' })
-  async findOne(@Param('id') id: string): Promise<Curso> {
+  async findOne(@Param('id') id: number): Promise<Curso> {
     return this.cursoRepository.findOne(id);
   }
 
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Curso atualizado com sucesso.', type: Curso })
   @ApiResponse({ status: 404, description: 'Curso não encontrado.' })
-  async update(@Param('id') id: string, @Body() updateCursoDto: UpdateCursoDto): Promise<Curso> {
+  async update(@Param('id') id: number, @Body() updateCursoDto: UpdateCursoDto): Promise<Curso> {
     return this.cursoRepository.update(id, updateCursoDto);
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Curso deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Curso não encontrado.' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return this.cursoRepository.remove(id);
   }
 }

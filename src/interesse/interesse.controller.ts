@@ -4,6 +4,7 @@ import { CreateInteresseDto } from './dto/create-interesse.dto';
 import { UpdateInteresseDto } from './dto/update-interesse.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Interesse } from './entities/interesse.entity';
+import { Aluno } from 'src/aluno/entities/aluno.entity';
 
 @ApiTags('interesses')
 @Controller('interesse')
@@ -23,24 +24,35 @@ export class InteresseController {
     return this.interesseRepository.findAll();
   }
 
+  @Get('turma/:turmaId/alunos')
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de alunos interessados na turma especificada.',
+    type: [Aluno], // Indica que o retorno é um array de Aluno
+  })
+  @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
+  async getAlunosPorTurma(@Param('turmaId') turmaId: number): Promise<Aluno[]> {
+    return this.interesseRepository.findAlunosPorTurma(turmaId);
+  }
+
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Interesse encontrado.', type: Interesse })
   @ApiResponse({ status: 404, description: 'Interesse não encontrado.' })
-  async findOne(@Param('id') id: string): Promise<Interesse> {
+  async findOne(@Param('id') id: number): Promise<Interesse> {
     return this.interesseRepository.findOne(id);
   }
 
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Interesse atualizado com sucesso.', type: Interesse })
   @ApiResponse({ status: 404, description: 'Interesse não encontrado.' })
-  async update(@Param('id') id: string, @Body() updateInteresseDto: UpdateInteresseDto): Promise<Interesse> {
+  async update(@Param('id') id: number, @Body() updateInteresseDto: UpdateInteresseDto): Promise<Interesse> {
     return this.interesseRepository.update(id, updateInteresseDto);
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Interesse deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Interesse não encontrado.' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return this.interesseRepository.remove(id);
   }
 }

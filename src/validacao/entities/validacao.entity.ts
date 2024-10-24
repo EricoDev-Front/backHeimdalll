@@ -1,13 +1,12 @@
-// validacao.entity.ts
 import { Professor } from 'src/professor/entities/professor.entity';
 import { Reserva } from 'src/reserva/entities/reserva.entity';
 import { Sala } from 'src/sala/entities/sala.entity';
-import { Entity, PrimaryColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Validacao {
-  @PrimaryColumn()
-  valida_id: string;
+  @PrimaryGeneratedColumn()
+  valida_id: number;
 
   @ManyToOne(() => Professor, (professor) => professor.professor_id)
   professor_id: number;

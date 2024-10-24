@@ -26,21 +26,21 @@ export class ReservaController {
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Reserva encontrada.', type: Reserva })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
-  async findOne(@Param('id') id: string): Promise<Reserva> {
+  async findOne(@Param('id') id: number): Promise<Reserva> {
     return this.reservaRepository.findOne(id);
   }
 
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Reserva atualizada com sucesso.', type: Reserva })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
-  async update(@Param('id') id: string, @Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+  async update(@Param('id') id: number, @Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
     return this.reservaRepository.update(id, updateReservaDto);
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Reserva deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
-  async remove(@Param('id') id: string): Promise<void> {
+  async remove(@Param('id') id: number): Promise<void> {
     return this.reservaRepository.remove(id);
   }
 }

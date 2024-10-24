@@ -1,4 +1,3 @@
-// create-sala.dto.ts
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString, IsInt } from 'class-validator';
 

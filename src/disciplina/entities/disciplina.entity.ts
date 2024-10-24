@@ -1,14 +1,17 @@
-// disciplina.entity.ts
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Curso } from 'src/curso/entities/curso.entity';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Disciplina {
-  @PrimaryColumn()
-  disciplina_id: string;
+  @PrimaryGeneratedColumn() // ID numérico gerado automaticamente
+  disciplina_id: number;
 
   @Column()
   nome: string;
 
   @Column({ nullable: true })
   descricao: string;
+
+  @ManyToOne(() => Curso, curso => curso.disciplinas)
+  curso: Curso;
 }

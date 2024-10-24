@@ -16,15 +16,15 @@ export class ValidacaoService {
     return this.validacaoRepository.findAll();
   }
 
-  findOne(id: string): Promise<Validacao> {
+  findOne(id: number): Promise<Validacao> {
     return this.validacaoRepository.findOne(id);
   }
 
-  update(id: string, updateValidacaoDto: UpdateValidacaoDto): Promise<Validacao> {
+  update(id: number, updateValidacaoDto: UpdateValidacaoDto): Promise<Validacao> {
     return this.validacaoRepository.update(id, updateValidacaoDto);
   }
 
-  remove(id: string): Promise<void> {
+  remove(id: number): Promise<void> {
     return this.validacaoRepository.remove(id);
   }
 }

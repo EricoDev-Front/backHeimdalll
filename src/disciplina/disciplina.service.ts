@@ -16,15 +16,15 @@ export class DisciplinaService {
     return this.disciplinaRepository.findAll();
   }
 
-  findOne(id: string): Promise<Disciplina> {
+  findOne(id: number): Promise<Disciplina> {
     return this.disciplinaRepository.findOne(id);
   }
 
-  update(id: string, updateDisciplinaDto: UpdateDisciplinaDto): Promise<Disciplina> {
+  update(id: number, updateDisciplinaDto: UpdateDisciplinaDto): Promise<Disciplina> {
     return this.disciplinaRepository.update(id, updateDisciplinaDto);
   }
 
-  remove(id: string): Promise<void> {
+  remove(id: number): Promise<void> {
     return this.disciplinaRepository.remove(id);
   }
 }
