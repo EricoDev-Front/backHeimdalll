@@ -19,6 +19,7 @@ import { Reserva } from './reserva/entities/reserva.entity';
 import { ValidacaoModule } from './validacao/validacao.module';
 import { Validacao } from './validacao/entities/validacao.entity';
 import { AlunoModule } from './aluno/aluno.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { AlunoModule } from './aluno/aluno.module';
     ReservaModule,
     ValidacaoModule,
     AlunoModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
