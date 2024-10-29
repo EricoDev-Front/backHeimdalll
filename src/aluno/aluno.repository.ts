@@ -1,7 +1,8 @@
-import { Repository } from 'typeorm';
-import { Aluno } from './entities/aluno.entity';
+// aluno.repository.ts
 import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Aluno } from './entities/aluno.entity';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
 import { UpdateAlunoDto } from './dto/update-aluno.dto';
 
@@ -25,6 +26,10 @@ export class AlunoRepository {
     return this.alunoRepository.findOne({ where: { aluno_id: id } });
   }
 
+  findByEmail(email: string) {
+    return this.alunoRepository.findOne({ where: { email } });
+  }
+
   async update(id: number, updateAlunoDto: UpdateAlunoDto): Promise<Aluno> {
     await this.alunoRepository.update(id, updateAlunoDto);
     return this.findOne(id);
@@ -34,4 +39,3 @@ export class AlunoRepository {
     await this.alunoRepository.delete(id);
   }
 }
-    

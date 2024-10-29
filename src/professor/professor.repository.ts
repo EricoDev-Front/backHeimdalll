@@ -1,7 +1,8 @@
-import { Repository } from 'typeorm';
-import { Professor } from './entities/professor.entity';
+// professor.repository.ts
 import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Professor } from './entities/professor.entity';
 import { CreateProfessorDto } from './dto/create-professor.dto';
 import { UpdateProfessorDto } from './dto/update-professor.dto';
 
@@ -12,17 +13,21 @@ export class ProfessorRepository {
     private readonly professorRepository: Repository<Professor>,
   ) {}
 
-  async createProfessor(createProfessorDto: CreateProfessorDto): Promise<Professor> {
+  createProfessor(createProfessorDto: CreateProfessorDto): Promise<Professor> {
     const newProfessor = this.professorRepository.create(createProfessorDto);
     return this.professorRepository.save(newProfessor);
   }
 
-  async findAll(): Promise<Professor[]> {
+  findAll(): Promise<Professor[]> {
     return this.professorRepository.find();
   }
 
-  async findOne(id: number): Promise<Professor> {
+  findOne(id: number): Promise<Professor> {
     return this.professorRepository.findOne({ where: { professor_id: id } });
+  }
+
+  findByEmail(email: string) {
+    return this.professorRepository.findOne({ where: { email } });
   }
 
   async update(id: number, updateProfessorDto: UpdateProfessorDto): Promise<Professor> {
