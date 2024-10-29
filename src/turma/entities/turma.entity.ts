@@ -3,6 +3,12 @@ import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 import { Professor } from 'src/professor/entities/professor.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
+
+export enum Periodo {
+  MATUTINO = 'matutino',
+  VESPERTINO = 'vespertino',
+  NOTURNO = 'noturno',
+}
 @Entity()
 export class Turma {
   @PrimaryGeneratedColumn() // Gera automaticamente um ID numérico
@@ -17,6 +23,12 @@ export class Turma {
   @ManyToOne(() => Disciplina, (disciplina) => disciplina.disciplina_id)
   disciplina: Disciplina;
 
-  @Column()
-  periodo: Date;
+  @Column({
+    type: 'enum',
+    enum: Periodo,
+  })
+  periodo: Periodo;
 }
+
+
+
