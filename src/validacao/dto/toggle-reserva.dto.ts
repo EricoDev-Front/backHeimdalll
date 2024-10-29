@@ -10,7 +10,7 @@ export class ToggleValidacaoDto {
   @ApiProperty({ description: 'ID da reserva' })
   @IsNumber()
   @IsNotEmpty()
-  reservaId: number;
+  validacaoId: number;
 
   @ApiProperty({ enum: StatusValidacao, description: 'Status da validação' })
   @IsEnum(StatusValidacao)

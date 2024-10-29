@@ -29,6 +29,9 @@ export class ReservaRepository {
   ) {}
 
   async createReserva(createReservaDto: CreateReservaDto): Promise<Reserva> {
+
+  createReservaDto.data_hora_final = new Date(createReservaDto.data_hora_final)
+  createReservaDto.data_hora_inicio = new Date(createReservaDto.data_hora_inicio)
     const professor = await this.professorRepository.findOne({
       where: { professor_id: createReservaDto.professor_id },
     });
@@ -43,6 +46,19 @@ export class ReservaRepository {
   
     if (!professor || !sala || !turma) {
       throw new Error('Professor, Sala ou Turma não encontrados');
+    }
+
+    const reservaConflitante = await this.reservaRepository.createQueryBuilder('reserva')
+    .where('reserva.sala_id = :salaId', { salaId: createReservaDto.sala_id })
+    .andWhere('reserva.professor_id = :professorId', { professorId: createReservaDto.professor_id })
+    .andWhere('reserva.turma_id = :turmaId', { turmaId: createReservaDto.turma_id })
+    .andWhere('(' +
+      '(:data_hora_inicio < reserva.data_hora_final AND :data_hora_final > reserva.data_hora_inicio)' +
+      ')', { data_hora_inicio: createReservaDto.data_hora_inicio, data_hora_final: createReservaDto.data_hora_final })
+    .getOne();
+
+    if (reservaConflitante) {
+      throw new Error('Conflito de reserva: já existe uma reserva para esta sala, professor ou turma no mesmo horário.');
     }
   
     const reserva = this.reservaRepository.create({
