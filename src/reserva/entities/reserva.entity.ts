@@ -8,15 +8,15 @@ export class Reserva {
   @PrimaryGeneratedColumn()
   reserva_id: number;
 
-  @ManyToOne(() => Professor, (professor) => professor.professor_id)
+  @ManyToOne(() => Professor, (professor) => professor.professor_id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'professor_id' }) // Define explicitamente o nome da coluna
   professor: Professor;
 
-  @ManyToOne(() => Sala, (sala) => sala.sala_id)
+  @ManyToOne(() => Sala, (sala) => sala.sala_id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'sala_id' }) // Define explicitamente o nome da coluna
   sala: Sala;
 
-  @ManyToOne(() => Turma, (turma) => turma.turma_id)
+  @ManyToOne(() => Turma, (turma) => turma.turma_id, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'turma_id' }) // Define explicitamente o nome da coluna
   turma: Turma;
 

@@ -12,6 +12,6 @@ export class Disciplina {
   @Column({ nullable: true })
   descricao: string;
 
-  @ManyToOne(() => Curso, curso => curso.disciplinas)
+  @ManyToOne(() => Curso, curso => curso.disciplinas, { onDelete: 'CASCADE' })
   curso: Curso;
 }
