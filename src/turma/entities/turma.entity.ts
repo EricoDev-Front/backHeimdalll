@@ -1,7 +1,7 @@
 import { Aluno } from 'src/aluno/entities/aluno.entity';
 import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 import { Professor } from 'src/professor/entities/professor.entity';
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable } from 'typeorm';
 
 
 export enum Periodo {
@@ -17,8 +17,9 @@ export class Turma {
   @ManyToOne(() => Professor, (professor) => professor.professor_id, { onDelete: 'CASCADE' })
   professor: Professor;
 
-  @ManyToOne(() => Aluno, (aluno) => aluno.aluno_id, { onDelete: 'CASCADE' })
-  aluno: Aluno;
+  @ManyToMany(() => Aluno, (aluno) => aluno.turmas, { onDelete: 'CASCADE' })
+  @JoinTable() // Necessário para uma relação ManyToMany
+  alunos: Aluno[]; // Mude aqui para ser uma lista de Alunos
 
   @ManyToOne(() => Disciplina, (disciplina) => disciplina.disciplina_id, { onDelete: 'CASCADE' })
   disciplina: Disciplina;

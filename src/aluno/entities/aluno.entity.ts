@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Turma } from 'src/turma/entities/turma.entity';
+import { Entity, PrimaryColumn, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 
 @Entity()
 export class Aluno {
@@ -19,4 +20,7 @@ export class Aluno {
 
   @Column()
   ano_entrada: number;
+
+  @ManyToMany(() => Turma, (turma) => turma.alunos)
+  turmas: Turma[]; // Mude aqui para manter a relação
 }

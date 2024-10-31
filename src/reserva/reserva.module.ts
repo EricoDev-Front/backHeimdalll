@@ -9,9 +9,11 @@ import { TurmaRepository } from 'src/turma/turma.repository';
 import { Professor } from 'src/professor/entities/professor.entity';
 import { Sala } from 'src/sala/entities/sala.entity';
 import { Validacao } from 'src/validacao/entities/validacao.entity';
+import { Aluno } from 'src/aluno/entities/aluno.entity';
+import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reserva, Turma, Professor, Sala, Validacao])],
+  imports: [TypeOrmModule.forFeature([Reserva, Turma, Professor, Sala, Validacao, Aluno, Disciplina])],
   controllers: [ReservaController],
   providers: [ReservaService, ReservaRepository, TurmaRepository],
 })

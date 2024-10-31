@@ -11,7 +11,7 @@ export class CreateTurmaDto {
   @ApiProperty({ description: 'ID do aluno associado à turma' })
   @IsNumber()
   @IsNotEmpty()
-  aluno_id: number;
+  aluno_ids: number[];
 
   @ApiProperty({ description: 'ID da disciplina associada à turma' })
   @IsNumber()
