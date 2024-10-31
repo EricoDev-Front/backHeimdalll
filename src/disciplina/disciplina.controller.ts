@@ -4,11 +4,15 @@ import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
 import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Disciplina } from './entities/disciplina.entity';
+import { DisciplinaService } from './disciplina.service';
 
 @ApiTags('disciplinas')
 @Controller('disciplina')
 export class DisciplinaController {
-  constructor(private readonly disciplinaRepository: DisciplinaRepository) {}
+  constructor(
+    private readonly disciplinaRepository: DisciplinaRepository,
+    private readonly disciplinaService: DisciplinaService,
+  ) {}
 
   @Post()
   @ApiResponse({ status: 201, description: 'Disciplina criada com sucesso.', type: Disciplina })
@@ -28,6 +32,11 @@ export class DisciplinaController {
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })
   async findOne(@Param('id') id: number): Promise<Disciplina> {
     return this.disciplinaRepository.findOne(id);
+  }
+
+  @Get('curso/:cursoId')
+  async getDisciplinasByCurso(@Param('cursoId') cursoId: number): Promise<Disciplina[]> {
+    return this.disciplinaService.findDisciplinasByCursoId(cursoId);
   }
 
   @Patch(':id')

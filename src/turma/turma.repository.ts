@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
+import { Professor } from 'src/professor/entities/professor.entity';
 
 @Injectable()
 export class TurmaRepository {
@@ -33,6 +34,17 @@ export class TurmaRepository {
     }
 
     return query.getMany();
+  }
+
+  async findProfessoresByDisciplinaId(disciplinaId: number): Promise<Professor[]> {
+    const turmas = await this.turmaRepository.find({
+      where: { disciplina: { disciplina_id: disciplinaId } },
+      relations: ['professor'],
+    });
+
+    const professores = turmas.map(turma => turma.professor);
+    // Remove professores duplicados
+    return Array.from(new Set(professores));
   }
 
 

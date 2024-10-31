@@ -4,11 +4,16 @@ import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
 import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Turma } from './entities/turma.entity';
+import { TurmaService } from './turma.service';
+import { Professor } from 'src/professor/entities/professor.entity';
 
 @ApiTags('turmas')
 @Controller('turma')
 export class TurmaController {
-  constructor(private readonly turmaRepository: TurmaRepository) {}
+  constructor(
+    private readonly turmaRepository: TurmaRepository,
+    private readonly turmaService: TurmaService,
+  ) {}
 
   @Post()
   @ApiResponse({ status: 201, description: 'Turma criada com sucesso.', type: Turma })
@@ -35,6 +40,11 @@ export class TurmaController {
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
   async findOne(@Param('id') id: number): Promise<Turma> {
     return this.turmaRepository.findOne(id);
+  }
+
+  @Get('disciplina/:disciplinaId/professores')
+  async getProfessoresByDisciplina(@Param('disciplinaId') disciplinaId: number): Promise<Professor[]> {
+    return this.turmaService.getProfessoresByDisciplinaId(disciplinaId);
   }
 
   @Patch(':id')
