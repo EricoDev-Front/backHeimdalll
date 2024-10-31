@@ -7,9 +7,9 @@ export class Interesse {
   @PrimaryGeneratedColumn() // ID gerado automaticamente como numérico
   interesse_id: number;
 
-  @ManyToOne(() => Aluno, (aluno) => aluno.aluno_id)
+  @ManyToOne(() => Aluno, (aluno) => aluno.aluno_id, { onDelete: 'CASCADE' })
   aluno: Aluno;
 
-  @ManyToOne(() => Turma, (turma) => turma.turma_id)
+  @ManyToOne(() => Turma, (turma) => turma.turma_id, { onDelete: 'CASCADE' })
   turma: Turma;
 }

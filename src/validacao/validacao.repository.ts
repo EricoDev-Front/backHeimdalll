@@ -23,42 +23,46 @@ export class ValidacaoRepository {
 
   async toggleValidacaoByReservaIds(toggleValidacaoDtos: ToggleValidacaoDto[]): Promise<string[]> {
     const resultados = [];
-  
-    for (const { reservaId, status } of toggleValidacaoDtos) {
-      const validacao = await this.validacaoRepository.findOne({
-        where: { reserva_id: reservaId },
-      });
-  
-      const reserva = await this.reservaRepository.findOne({
-        where: { reserva_id: reservaId },
-      });
-  
-      if (!reserva) {
-        resultados.push(`Reserva ${reservaId} não encontrada.`);
-        continue; // Pula para o próximo ID
-      }
-  
-      if (validacao) {
-        if (status === StatusValidacao.REJEITADO) {
-          // Deletar a validação se o status for REJEITADO
-          await this.validacaoRepository.delete(validacao.valida_id);
-          await this.reservaRepository.delete(reservaId)
-          resultados.push(`Validação da reserva ${reservaId} deletada.`);
-        } else if (status === StatusValidacao.APROVADO) {
-          // Atualizar o status da reserva para true
-          reserva.status = true;
-          await this.reservaRepository.save(reserva);
-          // Deletar a validação
-          await this.validacaoRepository.delete(validacao.valida_id);
-          resultados.push(`Validação da reserva ${reservaId} removida e reserva atualizada para true.`);
+    const validacaoIds = []; // Para armazenar os IDs de validação
+
+    for (const { validacaoId, status } of toggleValidacaoDtos) {
+        const validacao = await this.validacaoRepository.findOne({
+            where: { valida_id: validacaoId }, // Altere para buscar pelo ID de validação
+        });
+
+        if (!validacao) {
+            resultados.push(`Validação ${validacaoId} não encontrada.`);
+            continue; // Pula para o próximo ID
         }
-      } else {
-        resultados.push(`Validação da reserva ${reservaId} não encontrada.`);
-      }
+
+        const reserva = await this.reservaRepository.findOne({
+            where: { reserva_id: validacao.reserva_id }, // Use o ID da reserva da validação
+        });
+
+        if (!reserva) {
+            resultados.push(`Reserva correspondente à validação ${validacaoId} não encontrada.`);
+            continue; // Pula para o próximo ID
+        }
+
+        if (status === StatusValidacao.REJEITADO) {
+            // Deletar a validação se o status for REJEITADO
+            await this.validacaoRepository.delete(validacao.valida_id);
+            resultados.push(`Validação ${validacaoId} deletada.`);
+        } else if (status === StatusValidacao.APROVADO) {
+            // Atualizar o status da reserva para true
+            reserva.status = true;
+            await this.reservaRepository.save(reserva);
+            // Deletar a validação
+            await this.validacaoRepository.delete(validacao.valida_id);
+            resultados.push(`Validação ${validacaoId} removida e reserva atualizada para true.`);
+        }
+
+        validacaoIds.push(validacaoId); // Adiciona o ID de validação à lista
     }
-  
-    return resultados;
-  }
+
+    return validacaoIds; // Retorna a lista de IDs de validação
+}
+
   
   async findAll(): Promise<Validacao[]> {
     return this.validacaoRepository.find();

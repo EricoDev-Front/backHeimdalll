@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestj
 import { TurmaRepository } from './turma.repository';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Turma } from './entities/turma.entity';
 
 @ApiTags('turmas')
@@ -19,6 +19,9 @@ export class TurmaController {
 
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de turmas.', type: [Turma] })
+  @ApiQuery({ name: 'professor_id', required: false, type: String, description: 'ID do professor para filtrar as turmas' })
+  @ApiQuery({ name: 'disciplina_id', required: false, type: String, description: 'ID da disciplina para filtrar as turmas' })
+  @ApiQuery({ name: 'periodo', required: false, type: String, description: 'Período para filtrar as turmas no formato YYYY-MM-DD' })
   async findAll(
     @Query('professor_id') professor_id?: string,
     @Query('disciplina_id') disciplina_id?: string,
