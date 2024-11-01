@@ -6,6 +6,7 @@ import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Turma } from './entities/turma.entity';
 import { TurmaService } from './turma.service';
 import { Professor } from 'src/professor/entities/professor.entity';
+import { ProfessoresByDisciplinaDto } from './dto/professor-by-disciplina.dto';
 
 @ApiTags('turmas')
 @Controller('turma')
@@ -43,7 +44,7 @@ export class TurmaController {
   }
 
   @Get('disciplina/:disciplinaId/professores')
-  async getProfessoresByDisciplina(@Param('disciplinaId') disciplinaId: number): Promise<Professor[]> {
+  async getProfessoresByDisciplina(@Param('disciplinaId') disciplinaId: number): Promise<ProfessoresByDisciplinaDto> {
     return this.turmaService.getProfessoresByDisciplinaId(disciplinaId);
   }
 
