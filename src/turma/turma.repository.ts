@@ -7,6 +7,7 @@ import { UpdateTurmaDto } from './dto/update-turma.dto';
 import { Professor } from 'src/professor/entities/professor.entity';
 import { Aluno } from 'src/aluno/entities/aluno.entity';
 import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
+import { ProfessoresByDisciplinaDto } from './dto/professor-by-disciplina.dto';
 
 @Injectable()
 export class TurmaRepository {
@@ -71,15 +72,17 @@ export class TurmaRepository {
   }
 
 
-  async findProfessoresByDisciplinaId(disciplinaId: number): Promise<Professor[]> {
+  async findProfessoresByDisciplinaId(disciplinaId: number): Promise<ProfessoresByDisciplinaDto> {
     const turmas = await this.turmaRepository.find({
       where: { disciplina: { disciplina_id: disciplinaId } },
       relations: ['professor'],
     });
 
-    const professores = turmas.map(turma => turma.professor);
-    // Remove professores duplicados
-    return Array.from(new Set(professores));
+    const turma = new ProfessoresByDisciplinaDto();
+    turma.professores = turmas.map(turma => turma.professor);
+    turma.turma_id = turmas[0].turma_id;
+    
+    return turma;
   }
 
 

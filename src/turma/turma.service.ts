@@ -4,6 +4,7 @@ import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
 import { Turma } from './entities/turma.entity';
 import { Professor } from 'src/professor/entities/professor.entity';
+import { ProfessoresByDisciplinaDto } from './dto/professor-by-disciplina.dto';
 
 @Injectable()
 export class TurmaService {
@@ -17,14 +18,14 @@ export class TurmaService {
     return this.turmaRepository.findAll(professor_id, disciplina_id, periodo);
   }
 
-  async getProfessoresByDisciplinaId(disciplinaId: number): Promise<Professor[]> {
-    const professores = await this.turmaRepository.findProfessoresByDisciplinaId(disciplinaId);
+  async getProfessoresByDisciplinaId(disciplinaId: number): Promise<ProfessoresByDisciplinaDto> {
+    const professoresByDisciplinaDto = await this.turmaRepository.findProfessoresByDisciplinaId(disciplinaId);
     
-    if (professores.length === 0) {
+    if (professoresByDisciplinaDto.professores.length === 0) {
       throw new NotFoundException(`Nenhum professor encontrado para a disciplina com ID ${disciplinaId}`);
     }
 
-    return professores;
+    return professoresByDisciplinaDto;
   }
 
   findOne(id: number): Promise<Turma> {
