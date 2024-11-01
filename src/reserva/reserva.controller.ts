@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, Put } from '@nestjs/common';
 import { ReservaRepository } from './reserva.repository';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
@@ -39,11 +39,11 @@ export class ReservaController {
     return this.reservaRepository.findOne(id);
   }
 
-  @Patch(':id')
+  @Put()
   @ApiResponse({ status: 200, description: 'Reserva atualizada com sucesso.', type: Reserva })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
-  async update(@Param('id') id: number, @Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
-    return this.reservaRepository.update(id, updateReservaDto);
+  async update(@Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+    return this.reservaRepository.updateReserva(updateReservaDto);
   }
 
   @Delete(':id')

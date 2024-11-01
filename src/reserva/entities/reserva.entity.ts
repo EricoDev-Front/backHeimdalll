@@ -9,23 +9,26 @@ export class Reserva {
   reserva_id: number;
 
   @ManyToOne(() => Professor, (professor) => professor.professor_id, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'professor_id' }) // Define explicitamente o nome da coluna
+  @JoinColumn({ name: 'professor_id' })
   professor: Professor;
 
   @ManyToOne(() => Sala, (sala) => sala.sala_id, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'sala_id' }) // Define explicitamente o nome da coluna
+  @JoinColumn({ name: 'sala_id' })
   sala: Sala;
 
   @ManyToOne(() => Turma, (turma) => turma.turma_id, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'turma_id' }) // Define explicitamente o nome da coluna
+  @JoinColumn({ name: 'turma_id' })
   turma: Turma;
 
   @Column()
   status: boolean;
 
-  @Column()
-  data_hora_inicio: Date;
+  @Column('time') // Armazena apenas o horário
+  hora_inicio: string;
 
-  @Column()
-  data_hora_final: Date;
+  @Column('time')
+  hora_final: string;
+
+  @Column('simple-array') // Armazena os dias reservados como um array de strings
+  dias_reservados: string[];
 }
