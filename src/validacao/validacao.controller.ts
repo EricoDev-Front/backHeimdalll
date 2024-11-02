@@ -1,13 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ValidacaoRepository } from './validacao.repository';
 import { CreateValidacaoDto } from './dto/create-validacao.dto';
 import { UpdateValidacaoDto } from './dto/update-validacao.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Validacao } from './entities/validacao.entity';
 import { ToggleValidacaoDto } from './dto/toggle-reserva.dto';
+import { use } from 'passport';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('validacoes')
 @Controller('validacao')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class ValidacaoController {
   constructor(private readonly validacaoRepository: ValidacaoRepository) {}
 
@@ -30,13 +35,14 @@ export class ValidacaoController {
     return this.validacaoRepository.toggleValidacaoByReservaIds(toggleValidacaoDtos);
   }
 
-
+  @Roles('adm')
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de validações.', type: [Validacao] })
   async findAll(): Promise<Validacao[]> {
     return this.validacaoRepository.findAll();
   }
 
+  @Roles('adm')
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Validação encontrada.', type: Validacao })
   @ApiResponse({ status: 404, description: 'Validação não encontrada.' })
@@ -44,6 +50,7 @@ export class ValidacaoController {
     return this.validacaoRepository.findOne(id);
   }
 
+  @Roles('adm')
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Validação atualizada com sucesso.', type: Validacao })
   @ApiResponse({ status: 404, description: 'Validação não encontrada.' })
@@ -51,6 +58,7 @@ export class ValidacaoController {
     return this.validacaoRepository.update(id, updateValidacaoDto);
   }
 
+  @Roles('adm')
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Validação deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Validação não encontrada.' })

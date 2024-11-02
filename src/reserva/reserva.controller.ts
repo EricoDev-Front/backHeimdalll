@@ -1,21 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { ReservaRepository } from './reserva.repository';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
 import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Reserva } from './entities/reserva.entity';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('reservas')
 @Controller('reserva')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class ReservaController {
   constructor(private readonly reservaRepository: ReservaRepository) {}
 
+  @Roles('adm', 'professor')
   @Post()
   @ApiResponse({ status: 201, description: 'Reserva criada com sucesso.', type: Reserva })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
   async create(@Body() createReservaDto: CreateReservaDto): Promise<Reserva> {
     return this.reservaRepository.createReserva(createReservaDto);
   }
+
 
   @Get()
   @ApiQuery({ name: 'professorId', required: false, type: Number, description: 'ID do professor para filtrar as reservas' })
@@ -39,6 +45,7 @@ export class ReservaController {
     return this.reservaRepository.findOne(id);
   }
 
+  @Roles('adm', 'professor')
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Reserva atualizada com sucesso.', type: Reserva })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
@@ -46,6 +53,7 @@ export class ReservaController {
     return this.reservaRepository.update(id, updateReservaDto);
   }
 
+  @Roles('adm', 'professor')
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Reserva deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })

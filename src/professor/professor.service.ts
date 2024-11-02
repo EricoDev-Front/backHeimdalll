@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ProfessorRepository } from './professor.repository';
 import { CreateProfessorDto } from './dto/create-professor.dto';
 import { UpdateProfessorDto } from './dto/update-professor.dto';
@@ -20,11 +20,13 @@ export class ProfessorService {
   }
 
   async create(createProfessorDto: CreateProfessorDto) : Promise<Professor> {
+    const existingProfessor = await this.professorRepository.findByEmail(createProfessorDto.email);
+    if (existingProfessor) {
+      throw new HttpException('Email já cadastrado', HttpStatus.BAD_REQUEST);
+    }
+    
     const hashedPassword = await this.hashPassword(createProfessorDto.senha);
-    const professor = {
-      ...createProfessorDto,
-      senha: hashedPassword,
-    };
+    const professor = { ...createProfessorDto, senha: hashedPassword };
     return this.professorRepository.createProfessor(professor);
   }
 

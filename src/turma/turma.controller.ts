@@ -1,15 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { TurmaRepository } from './turma.repository';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
 import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Turma } from './entities/turma.entity';
+import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
+import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('turmas')
 @Controller('turma')
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class TurmaController {
   constructor(private readonly turmaRepository: TurmaRepository) {}
 
+  @Roles('adm')
   @Post()
   @ApiResponse({ status: 201, description: 'Turma criada com sucesso.', type: Turma })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
@@ -17,6 +22,7 @@ export class TurmaController {
     return this.turmaRepository.createTurma(createTurmaDto);
   }
 
+  @Roles('adm', 'professor')
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de turmas.', type: [Turma] })
   @ApiQuery({ name: 'professor_id', required: false, type: String, description: 'ID do professor para filtrar as turmas' })
@@ -30,6 +36,7 @@ export class TurmaController {
     return this.turmaRepository.findAll(professor_id, disciplina_id, periodo);
   }
 
+  @Roles('adm', 'professor')
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Turma encontrada.', type: Turma })
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
@@ -37,6 +44,7 @@ export class TurmaController {
     return this.turmaRepository.findOne(id);
   }
 
+  @Roles('adm')
   @Patch(':id')
   @ApiResponse({ status: 200, description: 'Turma atualizada com sucesso.', type: Turma })
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
@@ -44,6 +52,7 @@ export class TurmaController {
     return this.turmaRepository.update(id, updateTurmaDto);
   }
 
+  @Roles('adm')
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Turma deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })

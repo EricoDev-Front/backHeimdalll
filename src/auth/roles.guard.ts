@@ -1,26 +1,37 @@
 // src/auth/roles.guard.ts
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { ROLES_KEY } from './roles.decorator';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(
+    private reflector: Reflector,
+    private jwtService: JwtService,
+  ) {}
 
   canActivate(context: ExecutionContext): boolean {
-    const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
-      context.getHandler(),
-      context.getClass(),
-    ]);
-
+    const requiredRoles = this.reflector.get<string[]>(ROLES_KEY, context.getHandler());
     if (!requiredRoles) {
-      return true;
+      return true; // Se não há roles definidos, permite acesso
     }
 
-    const { user } = context.switchToHttp().getRequest();
-    const hasRole = requiredRoles.includes(user.userType);
+    const request = context.switchToHttp().getRequest();
+    const token = request.headers.authorization?.split(' ')[1];
 
-    // Verifica se o usuário é administrador quando necessário
-    return hasRole && (user.adm || !requiredRoles.includes('adm'));
+    if (!token) {
+      throw new UnauthorizedException('Token não fornecido');
+    }
+
+    try {
+      const user = this.jwtService.verify(token);
+      request.user = user; // Adiciona o usuário ao request
+
+      // Verifica se o userType do token está entre os papéis permitidos
+      return requiredRoles.includes(user.userType);
+    } catch (err) {
+      throw new UnauthorizedException('Token inválido ou expirado');
+    }
   }
 }

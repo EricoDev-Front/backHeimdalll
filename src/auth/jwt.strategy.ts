@@ -14,7 +14,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    // Inclui o tipo de usuário e outros atributos no objeto de requisição
-    return { userId: payload.sub, email: payload.email, adm: payload.adm, userType: payload.userType };
+    console.log('validando payload:', payload)
+    return {email: payload.email, userType: payload.userType };
   }
+  
 }

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ReservaService } from './reserva.service';
 import { ReservaController } from './reserva.controller';
 import { ReservaRepository } from './reserva.repository';
@@ -9,9 +9,12 @@ import { TurmaRepository } from 'src/turma/turma.repository';
 import { Professor } from 'src/professor/entities/professor.entity';
 import { Sala } from 'src/sala/entities/sala.entity';
 import { Validacao } from 'src/validacao/entities/validacao.entity';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reserva, Turma, Professor, Sala, Validacao])],
+  imports: [TypeOrmModule.forFeature([Reserva, Turma, Professor, Sala, Validacao]),
+  forwardRef(() => AuthModule),
+],
   controllers: [ReservaController],
   providers: [ReservaService, ReservaRepository, TurmaRepository],
 })

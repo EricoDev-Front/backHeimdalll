@@ -1,3 +1,4 @@
+// src/auth/jwt.auth.guard.ts
 import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -5,20 +6,25 @@ import { JwtService } from '@nestjs/jwt';
 export class JwtAuthGuard implements CanActivate {
   constructor(private readonly jwtService: JwtService) {}
 
-  canActivate(context: ExecutionContext): boolean {
+  async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const token = request.headers.authorization?.split(' ')[1]; // Captura o token do cabeçalho
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Token não fornecido');
     }
 
     try {
-      const payload = this.jwtService.verify(token); // Verifica e decodifica o token
-      request.user = payload; // Armazena os dados do usuário na requisição
+      const payload = await this.jwtService.verifyAsync(token); // Decodifica o token
+      console.log('Token:', token); // Log do token para verificação
+      console.log(this.jwtService.verifyAsync(token)); // Log do token para verificação
+      console.log('Payload decodificado:', payload); // Log do payload para verificação
+      request.user = payload; // Define os dados do usuário na requisição
       return true;
     } catch (e) {
-      throw new UnauthorizedException();
+      console.error('Erro ao verificar o token:', e); // Log do erro
+      throw new UnauthorizedException('Token inválido');
     }
+    
   }
 }

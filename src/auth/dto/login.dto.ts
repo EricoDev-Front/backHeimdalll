@@ -1,5 +1,5 @@
 // src/auth/dto/login.dto.ts
-import { IsEmail, IsIn, IsNotEmpty, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginDto {
@@ -12,8 +12,4 @@ export class LoginDto {
   @IsString()
   @IsNotEmpty()
   senha: string;
-
-  @ApiProperty({ description: 'Tipo de usuário', enum: ['professor', 'aluno'] })
-  @IsIn(['professor', 'aluno'])
-  userType: 'professor' | 'aluno'; // Especifique o tipo de usuário
 }

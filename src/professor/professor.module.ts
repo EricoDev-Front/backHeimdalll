@@ -1,14 +1,19 @@
-import { Module } from '@nestjs/common';
+// src/professor/professor.module.ts
+import { Module, forwardRef } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Professor } from './entities/professor.entity';
 import { ProfessorService } from './professor.service';
 import { ProfessorController } from './professor.controller';
-import { Professor } from './entities/professor.entity';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProfessorRepository } from './professor.repository';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Professor])],
+  imports: [
+    TypeOrmModule.forFeature([Professor]),
+    forwardRef(() => AuthModule),
+  ],
   controllers: [ProfessorController],
   providers: [ProfessorService, ProfessorRepository],
-  exports: [ProfessorRepository],
+  exports: [ProfessorService, ProfessorRepository], // Exportando o serviço e o repositório
 })
 export class ProfessorModule {}

@@ -1,5 +1,5 @@
 // aluno.service.ts
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { AlunoRepository } from './aluno.repository';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
@@ -19,6 +19,11 @@ export class AlunoService {
   }
 
   async create(createAlunoDto: CreateAlunoDto): Promise<Aluno> {
+    const existingAluno = await this.alunoRepository.findByEmail(createAlunoDto.email);
+    if (existingAluno) {
+      throw new HttpException('Email já cadastrado', HttpStatus.BAD_REQUEST);
+    }
+    
     const hashedPassword = await this.hashPassword(createAlunoDto.senha);
     const alunoData = { ...createAlunoDto, senha: hashedPassword };
     return this.alunoRepository.createAluno(alunoData);
