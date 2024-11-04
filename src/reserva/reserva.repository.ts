@@ -1,6 +1,6 @@
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { Reserva } from './entities/reserva.entity';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
@@ -29,6 +29,7 @@ export class ReservaRepository {
     private readonly validacaoRepository: Repository<Validacao>,
   ) {}
 
+
   async createReserva(createReservaDto: CreateReservaDto): Promise<Reserva> {
     const { professor_id, sala_id, turma_id, dataInicio, dataFim, horaInicio, horaFim } = createReservaDto;
 
@@ -42,45 +43,108 @@ export class ReservaRepository {
     }
 
     // Gerar os dias reservados como strings no formato 'YYYY-MM-DD'
-    let currentDate = new Date(dataInicio);
-    const endDate = new Date(dataFim);
+    const startDate = new Date(`${dataInicio}T00:00:00`);
+    const endDate = new Date(`${dataFim}T00:00:00`);
     const diasReservados: string[] = [];
 
+    let currentDate = startDate;
     while (currentDate <= endDate) {
       diasReservados.push(format(currentDate, 'yyyy-MM-dd'));
       currentDate = addDays(currentDate, 1);
     }
 
-    // Verificar conflitos de reservas para qualquer dia do intervalo
-    const reservaConflitante = await this.reservaRepository.createQueryBuilder('reserva')
-      .where('reserva.sala_id = :salaId', { salaId: sala_id })
-      .andWhere('reserva.professor_id = :professorId', { professorId: professor_id })
-      .andWhere('reserva.turma_id = :turmaId', { turmaId: turma_id })
-      .andWhere('(reserva.hora_inicio < :horaFim AND reserva.hora_final > :horaInicio)', {
-        horaInicio,
-        horaFim,
-      })
-      .andWhere('(ARRAY[:diasReservados] && reserva.dias_reservados)', { diasReservados })
-      .getOne();
+    // Variáveis para armazenar o tipo de conflito
+let conflitoSala = false;
+let conflitoProfessor = false;
+let conflitoTurma = false;
 
-    if (reservaConflitante) {
-      throw new Error('Conflito de reserva: já existe uma reserva para esta sala, professor ou turma no mesmo horário e dia.');
-    }
+// Verifica conflito para a sala
+const conflitoSalaReserva = await this.reservaRepository.createQueryBuilder('reserva')
+  .where('reserva.sala_id = :salaId', { salaId: sala_id })
+  .andWhere('(reserva.hora_inicio < :horaFim AND reserva.hora_final > :horaInicio)', {
+    horaInicio,
+    horaFim,
+  })
+  .andWhere(new Brackets((qb) => {
+    diasReservados.forEach((dia, index) => {
+      qb.orWhere(`reserva.dias_reservados LIKE :dia${index}`, { [`dia${index}`]: `%${dia}%` });
+    });
+  }))
+  .getOne();
+
+if (conflitoSalaReserva) conflitoSala = true;
+
+// Verifica conflito para o professor
+const conflitoProfessorReserva = await this.reservaRepository.createQueryBuilder('reserva')
+  .where('reserva.professor_id = :professorId', { professorId: professor_id })
+  .andWhere('(reserva.hora_inicio < :horaFim AND reserva.hora_final > :horaInicio)', {
+    horaInicio,
+    horaFim,
+  })
+  .andWhere(new Brackets((qb) => {
+    diasReservados.forEach((dia, index) => {
+      qb.orWhere(`reserva.dias_reservados LIKE :dia${index}`, { [`dia${index}`]: `%${dia}%` });
+    });
+  }))
+  .getOne();
+
+if (conflitoProfessorReserva) conflitoProfessor = true;
+
+// Verifica conflito para a turma
+const conflitoTurmaReserva = await this.reservaRepository.createQueryBuilder('reserva')
+  .where('reserva.turma_id = :turmaId', { turmaId: turma_id })
+  .andWhere('(reserva.hora_inicio < :horaFim AND reserva.hora_final > :horaInicio)', {
+    horaInicio,
+    horaFim,
+  })
+  .andWhere(new Brackets((qb) => {
+    diasReservados.forEach((dia, index) => {
+      qb.orWhere(`reserva.dias_reservados LIKE :dia${index}`, { [`dia${index}`]: `%${dia}%` });
+    });
+  }))
+  .getOne();
+
+if (conflitoTurmaReserva) conflitoTurma = true;
+
+// Retorna uma mensagem personalizada de acordo com o tipo de conflito
+if (conflitoSala || conflitoProfessor || conflitoTurma) {
+  let mensagemErro = 'Conflito de reserva: já existe uma reserva para ';
+  if (conflitoSala) mensagemErro += 'esta sala';
+  if (conflitoProfessor) mensagemErro += conflitoSala ? ', professor' : 'este professor';
+  if (conflitoTurma) mensagemErro += (conflitoSala || conflitoProfessor) ? ', e turma' : 'esta turma';
+
+  throw new HttpException(mensagemErro + ' no mesmo horário e dia.', HttpStatus.CONFLICT);
+}
+
 
     // Criar e salvar a reserva
     const reserva = this.reservaRepository.create({
       professor,
       sala,
       turma,
-      status: false, // status inicial da reserva
+      status: false,
       hora_inicio: horaInicio,
       hora_final: horaFim,
       dias_reservados: diasReservados,
     });
 
-    return await this.reservaRepository.save(reserva);
+    const novaReserva = await this.reservaRepository.save(reserva);
+
+    // Criar e salvar a entidade de validação
+    const validacao = new Validacao();
+    validacao.professor = professor; // Atribua o objeto Professor
+    validacao.sala = sala;           // Atribua o objeto Sala
+    validacao.reserva = novaReserva; // Atribua o objeto Reserva
+    validacao.status = false; // Define o status inicial da validação
+    validacao.hora_inicio = horaInicio;
+    validacao.hora_final = horaFim;
+    validacao.dias_reservados = diasReservados;
+
+    await this.validacaoRepository.save(validacao);
+
+    return novaReserva;
   }
-  
+
 
   async findReservas(
     professorId?: number,
@@ -167,6 +231,6 @@ export class ReservaRepository {
   }
 
   async remove(id: number): Promise<void> {
-    await this.reservaRepository.delete(id);
+    await this.reservaRepository.delete({});
   }
 }
