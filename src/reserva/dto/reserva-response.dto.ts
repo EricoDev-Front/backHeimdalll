@@ -16,9 +16,12 @@ export class ReservaResponseDto {
   @ApiProperty({ description: 'Status da reserva' })
   status: boolean;
 
-  @ApiProperty({ description: 'Data e hora de início da reserva', type: Date })
-  data_hora_inicio: Date;
+  @ApiProperty({ description: 'Hora de início da reserva', type: String })
+  hora_inicio: string; // Formato: 'HH:mm'
 
-  @ApiProperty({ description: 'Data e hora de final da reserva', type: Date })
-  data_hora_final: Date;
+  @ApiProperty({ description: 'Hora de final da reserva', type: String })
+  hora_final: string; // Formato: 'HH:mm'
+
+  @ApiProperty({ description: 'Dias reservados em formato de array', type: [String] })
+  dias_reservados: string[]; // Exemplo: ['2024-11-01', '2024-11-02']
 }

@@ -4,6 +4,7 @@ import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
 import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Disciplina } from './entities/disciplina.entity';
+import { DisciplinaService } from './disciplina.service';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
@@ -12,7 +13,10 @@ import { Roles } from 'src/auth/roles.decorator';
 @Controller('disciplina')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class DisciplinaController {
-  constructor(private readonly disciplinaRepository: DisciplinaRepository) {}
+  constructor(
+    private readonly disciplinaRepository: DisciplinaRepository,
+    private readonly disciplinaService: DisciplinaService,
+  ) {}
 
   @Roles('adm')
   @Post()
@@ -35,6 +39,11 @@ export class DisciplinaController {
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })
   async findOne(@Param('id') id: number): Promise<Disciplina> {
     return this.disciplinaRepository.findOne(id);
+  }
+
+  @Get('curso/:cursoId')
+  async getDisciplinasByCurso(@Param('cursoId') cursoId: number): Promise<Disciplina[]> {
+    return this.disciplinaService.findDisciplinasByCursoId(cursoId);
   }
 
   @Roles('adm')

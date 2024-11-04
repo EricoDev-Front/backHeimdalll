@@ -27,7 +27,8 @@ export class ValidacaoRepository {
 
     for (const { validacaoId, status } of toggleValidacaoDtos) {
         const validacao = await this.validacaoRepository.findOne({
-            where: { valida_id: validacaoId }, // Altere para buscar pelo ID de validação
+            where: { valida_id: validacaoId },
+            relations: ['reserva'] // Carrega a relação com a reserva
         });
 
         if (!validacao) {
@@ -35,9 +36,7 @@ export class ValidacaoRepository {
             continue; // Pula para o próximo ID
         }
 
-        const reserva = await this.reservaRepository.findOne({
-            where: { reserva_id: validacao.reserva_id }, // Use o ID da reserva da validação
-        });
+        const reserva = validacao.reserva; // Acesse o objeto Reserva diretamente
 
         if (!reserva) {
             resultados.push(`Reserva correspondente à validação ${validacaoId} não encontrada.`);
@@ -63,10 +62,14 @@ export class ValidacaoRepository {
     return validacaoIds; // Retorna a lista de IDs de validação
 }
 
-  
+
+
   async findAll(): Promise<Validacao[]> {
-    return this.validacaoRepository.find();
+    return this.validacaoRepository.find({
+      relations: ['reserva', 'professor', 'sala'],
+    });
   }
+
 
   async findOne(id: number): Promise<Validacao> {
     return this.validacaoRepository.findOne({ where: { valida_id: id } });
@@ -78,6 +81,6 @@ export class ValidacaoRepository {
   }
 
   async remove(id: number): Promise<void> {
-    await this.validacaoRepository.delete(id);
+    await this.validacaoRepository.delete({});
   }
 }

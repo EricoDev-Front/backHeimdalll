@@ -21,7 +21,7 @@ export class ReservaService {
   }
 
   update(id: number, updateReservaDto: UpdateReservaDto): Promise<Reserva> {
-    return this.reservaRepository.update(id, updateReservaDto);
+    return this.reservaRepository.updateReserva(updateReservaDto);
   }
 
   remove(id: number): Promise<void> {

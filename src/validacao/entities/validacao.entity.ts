@@ -9,20 +9,23 @@ export class Validacao {
   valida_id: number;
 
   @ManyToOne(() => Professor, (professor) => professor.professor_id, { onDelete: 'CASCADE' })
-  professor_id: number;
+  professor: Professor;  // Mude de professor_id para professor
 
   @ManyToOne(() => Sala, (sala) => sala.sala_id, { onDelete: 'CASCADE' })
-  sala_id: number;
+  sala: Sala;  // Mude de sala_id para sala
 
   @ManyToOne(() => Reserva, (reserva) => reserva.reserva_id, { onDelete: 'CASCADE' })
-  reserva_id: number;
+  reserva: Reserva;  // Mude de reserva_id para reserva
 
   @Column()
   status: boolean;
 
-  @Column()
-  data_hora_inicio: Date;
+  @Column('time') // Armazena apenas o horário
+  hora_inicio: string;
 
-  @Column()
-  data_hora_final: Date;
+  @Column('time')
+  hora_final: string;
+
+  @Column('simple-array') // Armazena os dias reservados como um array de strings
+  dias_reservados: string[];
 }

@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsBoolean } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateReservaDto {
@@ -11,21 +11,29 @@ export class CreateReservaDto {
   @IsNumber()
   @IsNotEmpty()
   sala_id: number;
-  
+
   @ApiProperty({ description: 'ID da turma associada à reserva' })
   @IsNumber()
   @IsNotEmpty()
   turma_id: number;
 
-  @ApiProperty({ description: 'Status da reserva' })
-  @IsBoolean()
-  status: boolean;
-
-  @ApiProperty({ description: 'Data e hora de início da reserva', type: Date })
+  @ApiProperty({ description: 'Data de início do intervalo', example: '2024-11-01' })
+  @IsString()
   @IsNotEmpty()
-  data_hora_inicio: Date;
+  dataInicio: string; // Data de início do intervalo (formato 'YYYY-MM-DD')
 
-  @ApiProperty({ description: 'Data e hora de final da reserva', type: Date })
+  @ApiProperty({ description: 'Data de fim do intervalo', example: '2024-11-03' })
+  @IsString()
   @IsNotEmpty()
-  data_hora_final: Date;
+  dataFim: string; // Data de fim do intervalo (formato 'YYYY-MM-DD')
+
+  @ApiProperty({ description: 'Horário de início', example: '18:00' })
+  @IsString()
+  @IsNotEmpty()
+  horaInicio: string; // Horário de início (formato 'HH:mm')
+
+  @ApiProperty({ description: 'Horário de fim', example: '19:00' })
+  @IsString()
+  @IsNotEmpty()
+  horaFim: string; // Horário de fim (formato 'HH:mm')
 }

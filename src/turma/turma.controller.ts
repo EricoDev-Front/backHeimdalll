@@ -7,12 +7,18 @@ import { Turma } from './entities/turma.entity';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
+import { TurmaService } from './turma.service';
+import { Professor } from 'src/professor/entities/professor.entity';
+import { ProfessoresByDisciplinaDto } from './dto/professor-by-disciplina.dto';
 
 @ApiTags('turmas')
 @Controller('turma')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class TurmaController {
-  constructor(private readonly turmaRepository: TurmaRepository) {}
+  constructor(
+    private readonly turmaRepository: TurmaRepository,
+    private readonly turmaService: TurmaService,
+  ) {}
 
   @Roles('adm')
   @Post()
@@ -42,6 +48,12 @@ export class TurmaController {
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
   async findOne(@Param('id') id: number): Promise<Turma> {
     return this.turmaRepository.findOne(id);
+  }
+
+  @Roles('adm', 'professor')
+  @Get('disciplina/:disciplinaId/professores')
+  async getProfessoresByDisciplina(@Param('disciplinaId') disciplinaId: number): Promise<ProfessoresByDisciplinaDto> {
+    return this.turmaService.getProfessoresByDisciplinaId(disciplinaId);
   }
 
   @Roles('adm')

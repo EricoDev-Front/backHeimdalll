@@ -10,9 +10,11 @@ import { Professor } from 'src/professor/entities/professor.entity';
 import { Sala } from 'src/sala/entities/sala.entity';
 import { Validacao } from 'src/validacao/entities/validacao.entity';
 import { AuthModule } from 'src/auth/auth.module';
+import { Aluno } from 'src/aluno/entities/aluno.entity';
+import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Reserva, Turma, Professor, Sala, Validacao]),
+  imports: [TypeOrmModule.forFeature([Reserva, Turma, Professor, Sala, Validacao, Aluno, Disciplina]),
   forwardRef(() => AuthModule),
 ],
   controllers: [ReservaController],

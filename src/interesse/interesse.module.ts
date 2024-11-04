@@ -8,12 +8,13 @@ import { AlunoRepository } from 'src/aluno/aluno.repository';
 import { TurmaRepository } from 'src/turma/turma.repository';
 import { Aluno } from 'src/aluno/entities/aluno.entity';
 import { Turma } from 'src/turma/entities/turma.entity';
+import { Professor } from 'src/professor/entities/professor.entity';
+import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Interesse,Aluno,Turma]),
-  forwardRef(() => AuthModule),
-],
+  imports: [TypeOrmModule.forFeature([Interesse,Aluno,Turma, Professor, Disciplina]),
+  forwardRef(() => AuthModule),],
   controllers: [InteresseController],
   providers: [InteresseService, InteresseRepository, AlunoRepository, TurmaRepository],
 })
