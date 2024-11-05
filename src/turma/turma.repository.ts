@@ -50,41 +50,45 @@ export class TurmaRepository {
 }
 
 
-  async findAll(professor_id?: string, disciplina_id?: string, periodo?: string): Promise<Turma[]> {
-    const query = this.turmaRepository.createQueryBuilder('turma')
-        .leftJoinAndSelect('turma.professor', 'professor')
-        .leftJoinAndSelect('turma.alunos', 'aluno') // Agora carrega a lista de alunos
-        .leftJoinAndSelect('turma.disciplina', 'disciplina');
+async findAll(professor_id?: string, disciplina_id?: string, periodo?: string): Promise<Turma[]> {
+  const query = this.turmaRepository.createQueryBuilder('turma')
+      .leftJoinAndSelect('turma.professor', 'professor')
+      .leftJoinAndSelect('turma.alunos', 'aluno') // Carrega a lista de alunos
+      .leftJoinAndSelect('turma.disciplina', 'disciplina');
 
-    if (professor_id) {
-        query.andWhere('turma.professor_id = :professor_id', { professor_id });
-    }
-
-    if (disciplina_id) {
-        query.andWhere('turma.disciplina_id = :disciplina_id', { disciplina_id });
-    }
-
-    if (periodo) {
-        query.andWhere('turma.periodo = :periodo', { periodo });
-    }
-
-    return query.getMany();
+  if (professor_id) {
+      query.andWhere('professor.professor_id = :professor_id', { professor_id });
   }
 
-
-  async findProfessoresByDisciplinaId(disciplinaId: number): Promise<ProfessoresByDisciplinaDto> {
-    const turmas = await this.turmaRepository.find({
-      where: { disciplina: { disciplina_id: disciplinaId } },
-      relations: ['professor'],
-    });
-
-    const turma = new ProfessoresByDisciplinaDto();
-    turma.professores = turmas.map(turma => turma.professor);
-    turma.turma_id = turmas[0].turma_id;
-    
-    return turma;
+  if (disciplina_id) {
+      query.andWhere('disciplina.disciplina_id = :disciplina_id', { disciplina_id });
   }
 
+  if (periodo) {
+      query.andWhere('turma.periodo = :periodo', { periodo });
+  }
+
+  return query.getMany();
+}
+
+
+
+async findProfessoresByDisciplinaId(disciplinaId: number): Promise<ProfessoresByDisciplinaDto> {
+  const turmas = await this.turmaRepository.find({
+    where: { disciplina: { disciplina_id: disciplinaId } },
+    relations: ['professor'],
+  });
+
+  if (turmas.length === 0) {
+      throw new Error(`Nenhuma turma encontrada para a disciplina com ID ${disciplinaId}`);
+  }
+
+  const turmaDto = new ProfessoresByDisciplinaDto();
+  turmaDto.professores = turmas.map(turma => turma.professor);
+  turmaDto.turma_id = turmas[0].turma_id;
+  
+  return turmaDto;
+}
 
   async findOne(id: number): Promise<Turma> {
     return this.turmaRepository.findOne({ where: { turma_id: id } });
