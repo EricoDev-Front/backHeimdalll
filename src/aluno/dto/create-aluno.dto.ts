@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsInt } from 'class-validator';
+import { IsNotEmpty, IsString, IsInt, IsBoolean } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAlunoDto {
@@ -25,4 +25,8 @@ export class CreateAlunoDto {
   @ApiProperty({ description: 'Ano de entrada do aluno' })
   @IsInt()
   ano_entrada: number;
+
+  @ApiProperty({ description: 'Se o Aluno foi validado' })
+  @IsBoolean()
+  status?: boolean;
 }

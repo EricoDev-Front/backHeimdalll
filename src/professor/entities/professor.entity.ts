@@ -19,4 +19,7 @@ export class Professor {
 
   @Column()
   adm: boolean;
+  
+  @Column()
+  status: boolean;
 }
