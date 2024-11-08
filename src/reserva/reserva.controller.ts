@@ -19,16 +19,14 @@ export class ReservaController {
 
   @Get()
   @ApiQuery({ name: 'professorId', required: false, type: Number, description: 'ID do professor para filtrar as reservas' })
-  @ApiQuery({ name: 'salaId', required: false, type: Number, description: 'ID da sala para filtrar as reservas' })
   @ApiQuery({ name: 'turmaId', required: false, type: Number, description: 'ID da turma para filtrar as reservas' })
   @ApiResponse({ status: 200, description: 'Reservas encontradas', type: [Reserva] })
   @ApiResponse({ status: 404, description: 'Nenhuma reserva encontrada' })
   async getReservas(
     @Query('professorId') professorId?: number,
-    @Query('salaId') salaId?: number,
     @Query('turmaId') turmaId?: number,
   ): Promise<Reserva[]> {
-    return this.reservaRepository.findReservas(professorId, salaId, turmaId);
+    return this.reservaRepository.findReservas(professorId, turmaId);
   }
 
 
