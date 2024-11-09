@@ -1,15 +1,12 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { ProfessorRepository } from './professor.repository';
 import { CreateProfessorDto } from './dto/create-professor.dto';
 import { UpdateProfessorDto } from './dto/update-professor.dto';
 import { Professor } from './entities/professor.entity';
 import * as bcrypt from 'bcrypt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProfessorService {
-
   private readonly saltRounds = 10;
 
   constructor(private readonly professorRepository: ProfessorRepository) {}
@@ -19,12 +16,12 @@ export class ProfessorService {
     return bcrypt.hash(password, salt);
   }
 
-  async create(createProfessorDto: CreateProfessorDto) : Promise<Professor> {
+  async create(createProfessorDto: CreateProfessorDto): Promise<Professor> {
     const existingProfessor = await this.professorRepository.findByEmail(createProfessorDto.email);
     if (existingProfessor) {
-      throw new HttpException('Email já cadastrado', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException('Email já cadastrado');
     }
-    
+
     const hashedPassword = await this.hashPassword(createProfessorDto.senha);
     const professor = { ...createProfessorDto, senha: hashedPassword };
     return this.professorRepository.createProfessor(professor);
@@ -34,23 +31,29 @@ export class ProfessorService {
     return bcrypt.compare(password, hashedPassword);
   }
 
-  findAll(): Promise<Professor[]> {
+  async findAll(): Promise<Professor[]> {
     return this.professorRepository.findAll();
   }
 
-  findOne(id: number): Promise<Professor> {
-    return this.professorRepository.findOne(id);
+  async findOne(id: number): Promise<Professor> {
+    const professor = await this.professorRepository.findOne(id);
+    if (!professor) {
+      throw new NotFoundException(`Professor com ID ${id} não encontrado.`);
+    }
+    return professor;
   }
 
-  findByEmail(email: string) {
+  async findByEmail(email: string): Promise<Professor | null> {
     return this.professorRepository.findByEmail(email);
-}
+  }
 
-  update(id: number, updateProfessorDto: UpdateProfessorDto): Promise<Professor> {
+  async update(id: number, updateProfessorDto: UpdateProfessorDto): Promise<Professor> {
+    const professor = await this.findOne(id); // Validação de existência
     return this.professorRepository.update(id, updateProfessorDto);
   }
 
-  remove(id: number): Promise<void> {
-    return this.professorRepository.remove(id);
+  async remove(id: number): Promise<void> {
+    const professor = await this.findOne(id); // Validação de existência
+    await this.professorRepository.remove(id);
   }
 }

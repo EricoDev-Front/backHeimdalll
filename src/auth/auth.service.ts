@@ -7,6 +7,7 @@ import { AlunoService } from '../aluno/aluno.service';
 import * as bcrypt from 'bcrypt';
 
 export type User = {
+  nome: string;
   email: string;
   userType: 'professor' | 'aluno' | 'adm';
 };
@@ -22,6 +23,7 @@ export class AuthService {
   async validateUser(email: string, senha: string): Promise<User> {
     let user;
     let userType: 'professor' | 'aluno' | 'adm';
+    let nome;
 
     // Primeiro, procura o usuário na tabela de professores
     user = await this.professorService.findByEmail(email);
@@ -39,6 +41,7 @@ export class AuthService {
     // Validação da senha
     if (user && (await bcrypt.compare(senha, user.senha))) {
       return {
+        nome: user.nome,
         email: user.email,
         userType,
       };
@@ -49,6 +52,7 @@ export class AuthService {
 
   async login(user: User) {
     const payload = { 
+      nome: user.nome,
       email: user.email, 
       userType: user.userType, 
     };
@@ -57,7 +61,6 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign(payload),
-      isAdm: user.userType === 'adm',
     };
 
   }

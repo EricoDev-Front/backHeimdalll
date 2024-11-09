@@ -39,7 +39,7 @@ async function bootstrap() {
  // await app.listen(443, () => {
   //  console.log('Servidor HTTPS rodando na porta 443');
  // });
- await app.listen(3000, () => {
+  await app.listen(3000, () => {
     console.log('Servidor HTTP rodando na porta 3000');
   });
 }

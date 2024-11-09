@@ -42,7 +42,7 @@ export class TurmaController {
     return this.turmaRepository.findAll(professor_id, disciplina_id, periodo);
   }
 
-  @Roles('adm', 'professor')
+  //@Roles('adm', 'professor')
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Turma encontrada.', type: Turma })
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
@@ -50,7 +50,7 @@ export class TurmaController {
     return this.turmaRepository.findOne(id);
   }
 
-  @Roles('adm', 'professor')
+  //@Roles('adm', 'professor')
   @Get('disciplina/:disciplinaId/professores')
   async getProfessoresByDisciplina(@Param('disciplinaId') disciplinaId: number): Promise<ProfessoresByDisciplinaDto> {
     return this.turmaService.getProfessoresByDisciplinaId(disciplinaId);

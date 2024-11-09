@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Put } from '@nestjs/common';
-import { ReservaRepository } from './reserva.repository';
+import { ReservaService } from './reserva.service';  // Atualizado para importar o service
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
 import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -12,16 +12,15 @@ import { Roles } from 'src/auth/roles.decorator';
 @Controller('reserva')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ReservaController {
-  constructor(private readonly reservaRepository: ReservaRepository) {}
+  constructor(private readonly reservaService: ReservaService) {}  // Atualizado para usar o service
 
   @Roles('adm', 'professor')
   @Post()
   @ApiResponse({ status: 201, description: 'Reserva criada com sucesso.', type: Reserva })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
   async create(@Body() createReservaDto: CreateReservaDto): Promise<Reserva> {
-    return this.reservaRepository.createReserva(createReservaDto);
+    return this.reservaService.createReserva(createReservaDto);  // Usando o service
   }
-
 
   @Get()
   @ApiQuery({ name: 'professorId', required: false, type: Number, description: 'ID do professor para filtrar as reservas' })
@@ -34,15 +33,14 @@ export class ReservaController {
     @Query('salaId') salaId?: number,
     @Query('turmaId') turmaId?: number,
   ): Promise<Reserva[]> {
-    return this.reservaRepository.findReservas(professorId, salaId, turmaId);
+    return this.reservaService.findReservas(professorId, salaId, turmaId);  // Usando o service
   }
-
 
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Reserva encontrada.', type: Reserva })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
   async findOne(@Param('id') id: number): Promise<Reserva> {
-    return this.reservaRepository.findOne(id);
+    return this.reservaService.findOne(id);  // Usando o service
   }
 
   @Roles('adm', 'professor')
@@ -50,7 +48,7 @@ export class ReservaController {
   @ApiResponse({ status: 200, description: 'Reserva atualizada com sucesso.', type: Reserva })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
   async update(@Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
-    return this.reservaRepository.updateReserva(updateReservaDto);
+    return this.reservaService.update(updateReservaDto);  // Usando o service
   }
 
   @Roles('adm', 'professor')
@@ -58,6 +56,6 @@ export class ReservaController {
   @ApiResponse({ status: 204, description: 'Reserva deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
   async remove(@Param('id') id: number): Promise<void> {
-    return this.reservaRepository.remove(id);
+    return this.reservaService.remove(id);  // Usando o service
   }
 }

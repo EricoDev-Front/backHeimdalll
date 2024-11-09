@@ -231,6 +231,21 @@ if (conflitoSala || conflitoProfessor || conflitoTurma) {
   }
 
   async remove(id: number): Promise<void> {
-    await this.reservaRepository.delete({});
+    await this.reservaRepository.delete(id);
+  }
+  async getReservaDetalhada(id: number): Promise<Reserva> {
+    const reserva = await this.reservaRepository.createQueryBuilder('reserva')
+      .leftJoinAndSelect('reserva.professor', 'professor')
+      .leftJoinAndSelect('reserva.sala', 'sala')
+      .leftJoinAndSelect('reserva.turma', 'turma')
+      .leftJoinAndSelect('reserva.validacao', 'validacao') // Caso você queira incluir a validação associada
+      .where('reserva.reserva_id = :id', { id })
+      .getOne();
+
+    if (!reserva) {
+      throw new NotFoundException(`Reserva com ID ${id} não encontrada.`);
+    }
+
+    return reserva;
   }
 }

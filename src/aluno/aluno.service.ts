@@ -1,5 +1,4 @@
-// aluno.service.ts
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { AlunoRepository } from './aluno.repository';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
@@ -8,7 +7,6 @@ import { Aluno } from './entities/aluno.entity';
 
 @Injectable()
 export class AlunoService {
-
   private readonly saltRounds = 10;
 
   constructor(private readonly alunoRepository: AlunoRepository) {}
@@ -21,7 +19,7 @@ export class AlunoService {
   async create(createAlunoDto: CreateAlunoDto): Promise<Aluno> {
     const existingAluno = await this.alunoRepository.findByEmail(createAlunoDto.email);
     if (existingAluno) {
-      throw new HttpException('Email já cadastrado', HttpStatus.BAD_REQUEST);
+      throw new BadRequestException('Email já cadastrado');
     }
     
     const hashedPassword = await this.hashPassword(createAlunoDto.senha);
@@ -33,22 +31,28 @@ export class AlunoService {
     return this.alunoRepository.findAll();
   }
 
-  findOne(id: number): Promise<Aluno> {
-    return this.alunoRepository.findOne(id);
+  async findOne(id: number): Promise<Aluno> {
+    const aluno = await this.alunoRepository.findOne(id);
+    if (!aluno) {
+      throw new NotFoundException(`Aluno com ID ${id} não encontrado.`);
+    }
+    return aluno;
   }
 
-  findByEmail(email: string) {
+  async findByEmail(email: string): Promise<Aluno | null> {
     return this.alunoRepository.findByEmail(email);
-}
+  }
 
   async update(id: number, updateAlunoDto: UpdateAlunoDto): Promise<Aluno> {
+    const aluno = await this.findOne(id); // Valida se o aluno existe antes de atualizar
     if (updateAlunoDto.senha) {
       updateAlunoDto.senha = await this.hashPassword(updateAlunoDto.senha);
     }
     return this.alunoRepository.update(id, updateAlunoDto);
   }
 
-  remove(id: number): Promise<void> {
-    return this.alunoRepository.remove(id);
+  async remove(id: number): Promise<void> {
+    const aluno = await this.findOne(id); // Valida se o aluno existe antes de remover
+    await this.alunoRepository.remove(id);
   }
 }

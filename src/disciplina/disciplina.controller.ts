@@ -26,14 +26,14 @@ export class DisciplinaController {
     return this.disciplinaRepository.createDisciplina(createDisciplinaDto);
   }
 
-  @Roles('adm')
+  //@Roles('adm')
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de disciplinas.', type: [Disciplina] })
   async findAll(): Promise<Disciplina[]> {
     return this.disciplinaRepository.findAll();
   }
 
-  @Roles('adm')
+  //@Roles('adm')
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Disciplina encontrada.', type: Disciplina })
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })

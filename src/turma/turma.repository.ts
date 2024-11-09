@@ -90,9 +90,12 @@ async findProfessoresByDisciplinaId(disciplinaId: number): Promise<ProfessoresBy
   return turmaDto;
 }
 
-  async findOne(id: number): Promise<Turma> {
-    return this.turmaRepository.findOne({ where: { turma_id: id } });
-  }
+async findOne(id: number): Promise<Turma> {
+  return this.turmaRepository.findOne({
+    where: { turma_id: id },
+    relations: ['professor', 'alunos', 'disciplina'], // Aqui você inclui as relações necessárias
+  });
+}
 
   async update(id: number, updateTurmaDto: UpdateTurmaDto): Promise<Turma> {
     await this.turmaRepository.update(id, updateTurmaDto);
@@ -102,5 +105,20 @@ async findProfessoresByDisciplinaId(disciplinaId: number): Promise<ProfessoresBy
   async remove(id: number): Promise<void> {
     await this.turmaRepository.delete(id);
   }
+
+  async getTurmaWithAlunos(turmaId: number): Promise<Turma> {
+    const turma = await this.turmaRepository.findOne({
+      where: { turma_id: turmaId },
+      relations: ['alunos', 'professor', 'disciplina', 'sala'], // Carrega as relações necessárias
+    });
+  
+    if (!turma) {
+      throw new NotFoundException(`Turma com ID ${turmaId} não encontrada`);
+    }
+  
+    return turma;
+  }
 }
+
+
 

@@ -22,14 +22,14 @@ export class SalaController {
     return await this.salaService.create(createSalaDto); // Retorna a sala criada
   }
 
-  @Roles('adm')
+  //@Roles('adm')
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de salas.', type: [Sala] })
   async findAll(): Promise<Sala[]> {
     return await this.salaService.findAll(); // Retorna a lista de salas
   }
 
-  @Roles('adm')
+  //@Roles('adm')
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Sala encontrada.', type: Sala })
   @ApiResponse({ status: 404, description: 'Sala não encontrada.' })

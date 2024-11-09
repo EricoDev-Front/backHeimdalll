@@ -35,14 +35,14 @@ export class ValidacaoController {
     return this.validacaoRepository.toggleValidacaoByReservaIds(toggleValidacaoDtos);
   }
 
-  @Roles('adm')
+  //@Roles('adm')
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de validações.', type: [Validacao] })
   async findAll(): Promise<Validacao[]> {
     return this.validacaoRepository.findAll();
   }
 
-  @Roles('adm')
+  //@Roles('adm')
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Validação encontrada.', type: Validacao })
   @ApiResponse({ status: 404, description: 'Validação não encontrada.' })
