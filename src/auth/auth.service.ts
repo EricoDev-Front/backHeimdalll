@@ -1,6 +1,6 @@
 // src/auth/auth.service.ts
 
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ProfessorService } from '../professor/professor.service';
 import { AlunoService } from '../aluno/aluno.service';
@@ -21,39 +21,52 @@ export class AuthService {
     private readonly alunoService: AlunoService,
   ) {}
 
+  
+  
   async validateUser(email: string, senha: string): Promise<User> {
     let person;
     let userType: 'professor' | 'aluno' | 'adm';
-
+  
     // Verifica na tabela de professores
     person = await this.professorService.findByEmail(email);
     if (person) {
-      userType = person.adm ? 'adm' : 'professor'; // Se for admin, define o tipo como 'adm'
+      userType = person.adm ? 'adm' : 'professor';
+  
+      // Verifica se o professor está ativo
+      if (!person.ativo) {
+        throw new ForbiddenException('Conta de professor inativa');
+      }
     } else {
       // Caso não encontre na tabela de professores, tenta buscar na tabela de alunos
       person = await this.alunoService.findByEmail(email);
       if (person) {
         userType = 'aluno';
+  
+        // Verifica se o aluno está ativo
+        if (!person.ativo) {
+          throw new ForbiddenException('Conta de aluno inativa');
+        }
       }
     }
-
+  
     // Se não encontrar o usuário em nenhuma das tabelas
     if (!person) {
       throw new UnauthorizedException('Email ou senha incorretos');
     }
-
+  
     // Valida a senha
     const passwordMatch = await bcrypt.compare(senha, person.senha);
     if (!passwordMatch) {
       throw new UnauthorizedException('Email ou senha incorretos');
     }
-
+  
     // Retorna o usuário e seu tipo
     return {
-      person, // Pode retornar os dados completos do usuário
+      person, // Retorna os dados completos do usuário
       userType, // Retorna o tipo de usuário (aluno, professor ou adm)
     };
   }
+  
 
   async login(user: User) {
     const payload = { 
