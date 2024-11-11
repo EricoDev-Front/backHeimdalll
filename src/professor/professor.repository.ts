@@ -13,7 +13,8 @@ export class ProfessorRepository {
     private readonly professorRepository: Repository<Professor>,
   ) {}
 
-  createProfessor(createProfessorDto: CreateProfessorDto): Promise<Professor> {
+  async createProfessor(createProfessorDto: CreateProfessorDto): Promise<Professor> {
+    createProfessorDto.status = false;
     const newProfessor = this.professorRepository.create(createProfessorDto);
     return this.professorRepository.save(newProfessor);
   }

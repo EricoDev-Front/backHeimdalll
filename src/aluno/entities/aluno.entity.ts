@@ -23,4 +23,7 @@ export class Aluno {
 
   @ManyToMany(() => Turma, (turma) => turma.alunos)
   turmas: Turma[]; // Mude aqui para manter a relação
+
+  @Column()
+  status: boolean;
 }

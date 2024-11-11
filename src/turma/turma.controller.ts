@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } f
 import { TurmaRepository } from './turma.repository';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
-import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Turma } from './entities/turma.entity';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
@@ -70,5 +70,28 @@ export class TurmaController {
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
   async remove(@Param('id') id: number): Promise<void> {
     return this.turmaRepository.remove(id);
+  }
+
+  @Post(':id/alunos/adicionar')
+  @ApiOperation({ summary: 'Adiciona múltiplos alunos a uma turma' })
+  @ApiParam({ name: 'id', description: 'ID da turma' })
+  @ApiBody({ schema: { type: 'object', properties: { alunoIds: { type: 'array', items: { type: 'number' } } } } })
+  async addAlunosToTurma(
+    @Param('id') turmaId: number,
+    @Body('alunoIds') alunoIds: number[],
+  ) {
+    return await this.turmaRepository.addAlunosToTurma(turmaId, alunoIds);
+  }
+
+  // Endpoint para remover alunos em lote de uma turma
+  @Delete(':id/alunos/remover')
+  @ApiOperation({ summary: 'Remove múltiplos alunos de uma turma' })
+  @ApiParam({ name: 'id', description: 'ID da turma' })
+  @ApiBody({ schema: { type: 'object', properties: { alunoIds: { type: 'array', items: { type: 'number' } } } } })
+  async removeAlunosFromTurma(
+    @Param('id') turmaId: number,
+    @Body('alunoIds') alunoIds: number[],
+  ) {
+    return await this.turmaRepository.removeAlunosFromTurma(turmaId, alunoIds);
   }
 }

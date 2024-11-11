@@ -25,7 +25,7 @@ import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('professores')
 @Controller('professor')
-@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e RolesGuard para todas as rotas
+// @UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e RolesGuard para todas as rotas
 export class ProfessorController {
   constructor(private readonly professorService: ProfessorService) {}
 

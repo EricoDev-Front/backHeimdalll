@@ -14,5 +14,6 @@ import { AuthModule } from '../auth/auth.module';
   ],
   controllers: [ProfessorController],
   providers: [ProfessorService, ProfessorRepository],
+  exports:[ProfessorService]
 })
 export class ProfessorModule {}

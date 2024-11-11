@@ -25,4 +25,8 @@ export class CreateProfessorDto {
   @ApiProperty({ description: 'Se o professor é administrador' })
   @IsBoolean()
   adm: boolean;
+  
+  @ApiProperty({ description: 'Se o professor foi validado' })
+  @IsBoolean()
+  status?: boolean;
 }

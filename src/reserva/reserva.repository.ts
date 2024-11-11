@@ -148,7 +148,6 @@ if (conflitoSala || conflitoProfessor || conflitoTurma) {
 
   async findReservas(
     professorId?: number,
-    salaId?: number,
     turmaId?: number,
   ): Promise<Reserva[]> {
     const queryBuilder = this.reservaRepository.createQueryBuilder('reserva');
@@ -160,17 +159,12 @@ if (conflitoSala || conflitoProfessor || conflitoTurma) {
       queryBuilder.andWhere('reserva.professor = :professorId', { professorId });
     }
   
-    if (salaId) {
-      queryBuilder.andWhere('reserva.sala = :salaId', { salaId });
-    }
-  
     if (turmaId) {
       queryBuilder.andWhere('reserva.turma = :turmaId', { turmaId });
     }
   
     // Adiciona as relações necessárias
     queryBuilder.leftJoinAndSelect('reserva.professor', 'professor');
-    queryBuilder.leftJoinAndSelect('reserva.sala', 'sala');
     queryBuilder.leftJoinAndSelect('reserva.turma', 'turma');
   
     return await queryBuilder.getMany();

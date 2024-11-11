@@ -1,5 +1,5 @@
-import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsArray } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Periodo } from '../entities/turma.entity';
 
 export class CreateTurmaDto {
@@ -8,10 +8,10 @@ export class CreateTurmaDto {
   @IsNotEmpty()
   professor_id: number;
 
-  @ApiProperty({ description: 'ID do aluno associado à turma' })
-  @IsNumber()
-  @IsNotEmpty()
-  aluno_ids: number[];
+  @ApiPropertyOptional({ description: 'Lista de IDs de alunos associados à turma (opcional)' })
+  @IsArray()
+  @IsOptional()
+  aluno_ids?: number[];
 
   @ApiProperty({ description: 'ID da disciplina associada à turma' })
   @IsNumber()

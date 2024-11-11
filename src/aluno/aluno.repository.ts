@@ -14,6 +14,7 @@ export class AlunoRepository {
   ) {}
 
   createAluno(createAlunoDto: CreateAlunoDto): Promise<Aluno> {
+    createAlunoDto.status = false;
     const newAluno = this.alunoRepository.create(createAlunoDto);
     return this.alunoRepository.save(newAluno);
   }
