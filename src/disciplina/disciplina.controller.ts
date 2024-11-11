@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { DisciplinaRepository } from './disciplina.repository';
 import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
 import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Disciplina } from './entities/disciplina.entity';
 import { DisciplinaService } from './disciplina.service';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
@@ -10,6 +10,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('disciplinas')
+@ApiBearerAuth()
 @Controller('disciplina')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class DisciplinaController {

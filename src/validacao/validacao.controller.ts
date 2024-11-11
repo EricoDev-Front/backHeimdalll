@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { ValidacaoRepository } from './validacao.repository';
 import { CreateValidacaoDto } from './dto/create-validacao.dto';
 import { UpdateValidacaoDto } from './dto/update-validacao.dto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Validacao } from './entities/validacao.entity';
 import { ToggleValidacaoDto } from './dto/toggle-reserva.dto';
 import { use } from 'passport';
@@ -11,6 +11,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('validacoes')
+@ApiBearerAuth()
 @Controller('validacao')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ValidacaoController {

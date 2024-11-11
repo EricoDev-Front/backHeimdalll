@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Pu
 import { ReservaRepository } from './reserva.repository';
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
-import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Reserva } from './entities/reserva.entity';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('reservas')
+@ApiBearerAuth()
 @Controller('reserva')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ReservaController {

@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { SalaService } from './sala.service';
 import { CreateSalaDto } from './dto/create-sala.dto';
 import { UpdateSalaDto } from './dto/update-sala.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Sala } from './entities/sala.entity'; // Importar a entidade Sala
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('salas')
+@ApiBearerAuth()
 @Controller('sala')
 @UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e RolesGuard para todas as rotas
 export class SalaController {

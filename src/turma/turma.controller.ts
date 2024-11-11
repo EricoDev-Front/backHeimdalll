@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } f
 import { TurmaRepository } from './turma.repository';
 import { CreateTurmaDto } from './dto/create-turma.dto';
 import { UpdateTurmaDto } from './dto/update-turma.dto';
-import { ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Turma } from './entities/turma.entity';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
@@ -12,6 +12,7 @@ import { Professor } from 'src/professor/entities/professor.entity';
 import { ProfessoresByDisciplinaDto } from './dto/professor-by-disciplina.dto';
 
 @ApiTags('turmas')
+@ApiBearerAuth()
 @Controller('turma')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class TurmaController {

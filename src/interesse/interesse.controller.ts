@@ -2,12 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@n
 import { InteresseRepository } from './interesse.repository';
 import { CreateInteresseDto } from './dto/create-interesse.dto';
 import { UpdateInteresseDto } from './dto/update-interesse.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Interesse } from './entities/interesse.entity';
 import { Aluno } from 'src/aluno/entities/aluno.entity';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 
 @ApiTags('interesses')
+@ApiBearerAuth()
 @Controller('interesse')
 @UseGuards(JwtAuthGuard)
 export class InteresseController {
