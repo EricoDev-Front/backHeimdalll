@@ -76,6 +76,6 @@ export class ReservaService {
     salaId?: number,
     turmaId?: number,
   ): Promise<Reserva[]> {
-    return this.reservaRepository.findReservas(professorId, salaId, turmaId);
+    return this.reservaRepository.findReservas(professorId, turmaId);
   }
 }

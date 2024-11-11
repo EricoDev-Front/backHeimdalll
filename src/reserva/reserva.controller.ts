@@ -32,7 +32,7 @@ export class ReservaController {
     @Query('professorId') professorId?: number,
     @Query('turmaId') turmaId?: number,
   ): Promise<Reserva[]> {
-    return this.reservaService.findReservas(professorId, salaId, turmaId);  // Usando o service
+    return this.reservaService.findReservas(professorId, turmaId);  // Usando o service
   }
 
   @Get(':id')
