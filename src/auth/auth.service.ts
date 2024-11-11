@@ -33,7 +33,7 @@ export class AuthService {
       userType = person.adm ? 'adm' : 'professor';
   
       // Verifica se o professor está ativo
-      if (!person.ativo) {
+      if (!person.status) {
         throw new ForbiddenException('Conta de professor inativa');
       }
     } else {
@@ -43,7 +43,7 @@ export class AuthService {
         userType = 'aluno';
   
         // Verifica se o aluno está ativo
-        if (!person.ativo) {
+        if (!person.status) {
           throw new ForbiddenException('Conta de aluno inativa');
         }
       }
