@@ -2,13 +2,14 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Pu
 import { ReservaService } from './reserva.service';  // Atualizado para importar o service
 import { CreateReservaDto } from './dto/create-reserva.dto';
 import { UpdateReservaDto } from './dto/update-reserva.dto';
-import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Reserva } from './entities/reserva.entity';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('reservas')
+@ApiBearerAuth()
 @Controller('reserva')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ReservaController {
@@ -24,13 +25,11 @@ export class ReservaController {
 
   @Get()
   @ApiQuery({ name: 'professorId', required: false, type: Number, description: 'ID do professor para filtrar as reservas' })
-  @ApiQuery({ name: 'salaId', required: false, type: Number, description: 'ID da sala para filtrar as reservas' })
   @ApiQuery({ name: 'turmaId', required: false, type: Number, description: 'ID da turma para filtrar as reservas' })
   @ApiResponse({ status: 200, description: 'Reservas encontradas', type: [Reserva] })
   @ApiResponse({ status: 404, description: 'Nenhuma reserva encontrada' })
   async getReservas(
     @Query('professorId') professorId?: number,
-    @Query('salaId') salaId?: number,
     @Query('turmaId') turmaId?: number,
   ): Promise<Reserva[]> {
     return this.reservaService.findReservas(professorId, salaId, turmaId);  // Usando o service

@@ -11,20 +11,21 @@ import {
 import { ProfessorService } from './professor.service';
 import { CreateProfessorDto } from './dto/create-professor.dto';
 import { UpdateProfessorDto } from './dto/update-professor.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Professor } from './entities/professor.entity';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('professores')
+@ApiBearerAuth()
 @Controller('professor')
-@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e RolesGuard para todas as rotas
+ // Usa o JwtAuthGuard e RolesGuard para todas as rotas
 export class ProfessorController {
   constructor(private readonly professorService: ProfessorService) {}
 
-  @Roles('adm')
   @Post()
+  @UseGuards()
   @ApiResponse({ status: 201, description: 'Professor criado com sucesso.', type: Professor })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
   async create(@Body() createProfessorDto: CreateProfessorDto): Promise<Professor> {
@@ -33,6 +34,7 @@ export class ProfessorController {
 
   //@Roles('professor', 'adm')
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 200, description: 'Lista de professores.', type: [Professor] })
   async findAll(): Promise<Professor[]> {
     return this.professorService.findAll();
@@ -40,6 +42,7 @@ export class ProfessorController {
 
   //@Roles('professor', 'adm')
   @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 200, description: 'Professor encontrado.', type: Professor })
   @ApiResponse({ status: 404, description: 'Professor não encontrado.' })
   async findOne(@Param('id') id: number): Promise<Professor> {
@@ -48,6 +51,7 @@ export class ProfessorController {
 
   @Roles('professor', 'adm')
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 200, description: 'Professor atualizado com sucesso.', type: Professor })
   @ApiResponse({ status: 404, description: 'Professor não encontrado.' })
   async update(@Param('id') id: number, @Body() updateProfessorDto: UpdateProfessorDto): Promise<Professor> {
@@ -56,6 +60,7 @@ export class ProfessorController {
 
   @Roles('professor', 'adm')
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 204, description: 'Professor deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Professor não encontrado.' })
   async remove(@Param('id') id: number): Promise<void> {

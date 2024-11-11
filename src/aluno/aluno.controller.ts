@@ -11,13 +11,14 @@ import {
 import { AlunoService } from './aluno.service';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
 import { UpdateAlunoDto } from './dto/update-aluno.dto';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Aluno } from './entities/aluno.entity';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('alunos')
+@ApiBearerAuth()
 @Controller('aluno')
 @UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e RolesGuard para todas as rotas
 export class AlunoController {
@@ -31,12 +32,14 @@ export class AlunoController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 200, description: 'Lista de alunos.', type: [Aluno] })
   async findAll(): Promise<Aluno[]> {
     return this.alunoService.findAll();
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 200, description: 'Aluno encontrado.', type: Aluno })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
   async findOne(@Param('id') id: number): Promise<Aluno> {
@@ -44,6 +47,7 @@ export class AlunoController {
   }
 
   @Patch(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 200, description: 'Aluno atualizado com sucesso.', type: Aluno })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
   async update(@Param('id') id: number, @Body() updateAlunoDto: UpdateAlunoDto): Promise<Aluno> {
@@ -51,6 +55,7 @@ export class AlunoController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 204, description: 'Aluno deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
   async remove(@Param('id') id: number): Promise<void> {

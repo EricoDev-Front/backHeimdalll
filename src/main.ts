@@ -7,19 +7,18 @@ import * as https from 'https';
 
 async function bootstrap() {
   // Carregar os certificados do Let's Encrypt
- // const httpsOptions = {
- //   key: fs.readFileSync(
- //     '/etc/letsencrypt/live/heimdallback.eastus2.cloudapp.azure.com/privkey.pem',
- //   ),
- //   cert: fs.readFileSync(
- //     '/etc/letsencrypt/live/heimdallback.eastus2.cloudapp.azure.com/fullchain.pem',
- //   ),
- // };
+ const httpsOptions = {
+   key: fs.readFileSync(
+     '/etc/letsencrypt/live/heimdallback.eastus2.cloudapp.azure.com/privkey.pem',
+   ),
+   cert: fs.readFileSync(
+     '/etc/letsencrypt/live/heimdallback.eastus2.cloudapp.azure.com/fullchain.pem',
+   ),
+ };
 
-  const app = await NestFactory.create(AppModule//, //{
-    //httpsOptions,
-  //}
-  );
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions,
+  });
 
   app.enableCors(); // Habilita o CORS
 
@@ -30,6 +29,7 @@ async function bootstrap() {
     )
     .setVersion('1.0')
     .addTag('reservas')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
