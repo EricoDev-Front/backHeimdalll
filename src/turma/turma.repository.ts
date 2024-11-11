@@ -26,28 +26,86 @@ export class TurmaRepository {
     // Busca as entidades associadas pelo ID diretamente
     const professor = await this.professorRepository.findOne({ where: { professor_id: createTurmaDto.professor_id } });
     const disciplina = await this.disciplinaRepository.findOne({ where: { disciplina_id: createTurmaDto.disciplina_id } });
-    const alunos = await this.alunoRepository.findByIds(createTurmaDto.aluno_ids); // Ajuste a propriedade para uma lista
-    // Verifica se todas as entidades foram encontradas
+  
     if (!professor) {
-        throw new NotFoundException(`Professor com ID ${createTurmaDto.professor_id} não encontrado`);
+      throw new NotFoundException(`Professor com ID ${createTurmaDto.professor_id} não encontrado`);
     }
-    if (alunos.length === 0) {
-      throw new NotFoundException(`Nenhum aluno encontrado para os IDs fornecidos`);
-  }
+  
     if (!disciplina) {
-        throw new NotFoundException(`Disciplina com ID ${createTurmaDto.disciplina_id} não encontrada`);
+      throw new NotFoundException(`Disciplina com ID ${createTurmaDto.disciplina_id} não encontrada`);
     }
-
+  
+    // Verifica se `aluno_ids` foi fornecido e busca os alunos
+    const alunos = createTurmaDto.aluno_ids && createTurmaDto.aluno_ids.length > 0
+      ? await this.alunoRepository.findByIds(createTurmaDto.aluno_ids)
+      : [];
+  
+    if (createTurmaDto.aluno_ids && alunos.length !== createTurmaDto.aluno_ids.length) {
+      throw new NotFoundException(`Alguns alunos não foram encontrados para os IDs fornecidos`);
+    }
+  
     // Cria a nova turma com as entidades associadas
     const turma = this.turmaRepository.create({
       professor,
-      alunos, // Agora você atribui a lista de alunos
+      alunos, // Associa a lista de alunos ou deixa vazia
       disciplina,
       periodo: createTurmaDto.periodo,
+    });
+  
+    return await this.turmaRepository.save(turma);
+  }
+
+  // Método para adicionar vários alunos a uma turma
+async addAlunosToTurma(turmaId: number, alunoIds: number[]): Promise<Turma> {
+  const turma = await this.turmaRepository.findOne({
+    where: { turma_id: turmaId },
+    relations: ['alunos'],
   });
 
-    return this.turmaRepository.save(turma);
+  if (!turma) {
+    throw new NotFoundException(`Turma com ID ${turmaId} não encontrada.`);
+  }
+
+  // Busca os alunos pelos IDs fornecidos
+  const alunosToAdd = await this.alunoRepository.findByIds(alunoIds);
+
+  // Verifica se algum dos IDs fornecidos não foi encontrado
+  if (alunosToAdd.length !== alunoIds.length) {
+    throw new NotFoundException(`Alguns alunos não foram encontrados para os IDs fornecidos`);
+  }
+
+  // Adiciona os alunos que ainda não estão na turma
+  const alunosNaoDuplicados = alunosToAdd.filter(
+    aluno => !turma.alunos.some(existingAluno => existingAluno.aluno_id === aluno.aluno_id)
+  );
+
+  turma.alunos.push(...alunosNaoDuplicados);
+  await this.turmaRepository.save(turma);
+
+  return turma;
 }
+
+
+// Método para remover vários alunos de uma turma
+async removeAlunosFromTurma(turmaId: number, alunoIds: number[]): Promise<Turma> {
+  const turma = await this.turmaRepository.findOne({
+    where: { turma_id: turmaId },
+    relations: ['alunos'],
+  });
+
+  if (!turma) {
+    throw new NotFoundException(`Turma com ID ${turmaId} não encontrada.`);
+  }
+
+  // Remove apenas os alunos que estão na lista de alunoIds
+  turma.alunos = turma.alunos.filter(aluno => !alunoIds.includes(aluno.aluno_id));
+  
+  await this.turmaRepository.save(turma);
+
+  return turma;
+}
+
+  
 
 
 async findAll(professor_id?: string, disciplina_id?: string, periodo?: string): Promise<Turma[]> {
