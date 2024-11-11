@@ -42,9 +42,10 @@ export class InteresseRepository {
 
 
   async findAll(): Promise<Interesse[]> {
-    return this.interesseRepository.find();
+    return this.interesseRepository.find({
+      relations: ['aluno', 'turma'], // Incluir as entidades relacionadas
+    });
   }
-
   async findAlunosPorTurma(turmaId: number): Promise<Aluno[]> {
     // Busca os interesses da turma específica
     const interesses = await this.interesseRepository.find({
