@@ -59,10 +59,12 @@ export class ReservaController {
   async getReservas(
     @Query('professorId') professorId?: number,
     @Query('turmaId') turmaId?: number,
+    @Query('salaId') salaId?: number,
   ): Promise<Reserva[]> {
     return this.reservaRepository.findReservas(
       professorId ?? null,
       turmaId ?? null,
+      salaId ?? null,
     );
   }
 

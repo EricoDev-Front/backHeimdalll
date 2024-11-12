@@ -193,6 +193,7 @@ export class ReservaRepository {
   async findReservas(
     professorId?: number,
     turmaId?: number,
+    salaId?: number,
   ): Promise<Reserva[]> {
     const queryBuilder = this.reservaRepository.createQueryBuilder('reserva');
 
@@ -205,10 +206,17 @@ export class ReservaRepository {
       });
     }
 
+    if (salaId) {
+      queryBuilder.andWhere('reserva.sala = :salaId', {
+        salaId,
+      });
+    }
+
     if (turmaId) {
       queryBuilder.andWhere('reserva.turma = :turmaId', { turmaId });
     }
 
+    queryBuilder.leftJoinAndSelect('reserva.sala', 'sala');
     queryBuilder.leftJoinAndSelect('reserva.professor', 'professor');
     queryBuilder.leftJoinAndSelect('reserva.turma', 'turma');
 
