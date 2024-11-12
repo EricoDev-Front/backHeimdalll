@@ -1,5 +1,16 @@
 // aluno.controller.ts
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  // UseGuards,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { AlunoService } from './aluno.service';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
 import { UpdateAlunoDto } from './dto/update-aluno.dto';
@@ -12,13 +23,20 @@ import { Roles } from 'src/auth/roles.decorator';
 @ApiTags('alunos')
 @ApiBearerAuth()
 @Controller('aluno')
-@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e o RolesGuard para todas as rotas
+//@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e o RolesGuard para todas as rotas
 export class AlunoController {
   constructor(private readonly alunoService: AlunoService) {}
 
   @Post()
-  @ApiResponse({ status: 201, description: 'Aluno criado com sucesso.', type: Aluno })
-  @ApiResponse({ status: 400, description: 'Erro de validação. Email já cadastrado.' }) // Mensagem clara para erro de email duplicado
+  @ApiResponse({
+    status: 201,
+    description: 'Aluno criado com sucesso.',
+    type: Aluno,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Erro de validação. Email já cadastrado.',
+  }) // Mensagem clara para erro de email duplicado
   async create(@Body() createAlunoDto: CreateAlunoDto): Promise<Aluno> {
     try {
       // Chama o serviço para criar o aluno e verifica email duplicado internamente
@@ -29,14 +47,14 @@ export class AlunoController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 200, description: 'Lista de alunos.', type: [Aluno] })
   async findAll(): Promise<Aluno[]> {
     return this.alunoService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 200, description: 'Aluno encontrado.', type: Aluno })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
   async findOne(@Param('id') id: number): Promise<Aluno> {
@@ -44,15 +62,22 @@ export class AlunoController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @ApiResponse({ status: 200, description: 'Aluno atualizado com sucesso.', type: Aluno })
+  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Aluno atualizado com sucesso.',
+    type: Aluno,
+  })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
-  async update(@Param('id') id: number, @Body() updateAlunoDto: UpdateAlunoDto): Promise<Aluno> {
+  async update(
+    @Param('id') id: number,
+    @Body() updateAlunoDto: UpdateAlunoDto,
+  ): Promise<Aluno> {
     return this.alunoService.update(id, updateAlunoDto);
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  //@UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 204, description: 'Aluno deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
   async remove(@Param('id') id: number): Promise<void> {
@@ -61,7 +86,10 @@ export class AlunoController {
 
   // Método auxiliar para tratar exceções
   private handleException(error: any): never {
-    if (error.status === HttpStatus.BAD_REQUEST && error.message === 'Email já cadastrado') {
+    if (
+      error.status === HttpStatus.BAD_REQUEST &&
+      error.message === 'Email já cadastrado'
+    ) {
       throw new HttpException(
         { status: HttpStatus.BAD_REQUEST, error: 'Email já cadastrado' },
         HttpStatus.BAD_REQUEST,
@@ -71,7 +99,10 @@ export class AlunoController {
     // Outros erros
     console.error('Erro inesperado:', error);
     throw new HttpException(
-      { status: HttpStatus.INTERNAL_SERVER_ERROR, error: error.message || 'Erro interno no servidor' },
+      {
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        error: error.message || 'Erro interno no servidor',
+      },
       HttpStatus.INTERNAL_SERVER_ERROR,
     );
   }

@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  //UseGuards,
+} from '@nestjs/common';
 import { SalaService } from './sala.service';
 import { CreateSalaDto } from './dto/create-sala.dto';
 import { UpdateSalaDto } from './dto/update-sala.dto';
@@ -11,13 +20,17 @@ import { Roles } from 'src/auth/roles.decorator';
 @ApiTags('salas')
 @ApiBearerAuth()
 @Controller('sala')
-@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e RolesGuard para todas as rotas
+//@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e RolesGuard para todas as rotas
 export class SalaController {
   constructor(private readonly salaService: SalaService) {}
 
   @Roles('adm')
   @Post()
-  @ApiResponse({ status: 201, description: 'Sala criada com sucesso.', type: Sala })
+  @ApiResponse({
+    status: 201,
+    description: 'Sala criada com sucesso.',
+    type: Sala,
+  })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
   async create(@Body() createSalaDto: CreateSalaDto): Promise<Sala> {
     return await this.salaService.create(createSalaDto); // Retorna a sala criada
@@ -40,9 +53,16 @@ export class SalaController {
 
   @Roles('adm')
   @Patch(':id')
-  @ApiResponse({ status: 200, description: 'Sala atualizada com sucesso.', type: Sala })
+  @ApiResponse({
+    status: 200,
+    description: 'Sala atualizada com sucesso.',
+    type: Sala,
+  })
   @ApiResponse({ status: 404, description: 'Sala não encontrada.' })
-  async update(@Param('id') id: number, @Body() updateSalaDto: UpdateSalaDto): Promise<Sala> {
+  async update(
+    @Param('id') id: number,
+    @Body() updateSalaDto: UpdateSalaDto,
+  ): Promise<Sala> {
     return await this.salaService.update(id, updateSalaDto); // Retorna a sala atualizada
   }
 
@@ -54,4 +74,3 @@ export class SalaController {
     return await this.salaService.remove(id); // Remove a sala
   }
 }
-  

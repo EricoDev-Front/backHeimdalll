@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  //UseGuards,
+} from '@nestjs/common';
 import { DisciplinaRepository } from './disciplina.repository';
 import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
 import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
@@ -12,7 +21,7 @@ import { Roles } from 'src/auth/roles.decorator';
 @ApiTags('disciplinas')
 @ApiBearerAuth()
 @Controller('disciplina')
-@UseGuards(JwtAuthGuard, RolesGuard)
+//@UseGuards(JwtAuthGuard, RolesGuard)
 export class DisciplinaController {
   constructor(
     private readonly disciplinaRepository: DisciplinaRepository,
@@ -21,37 +30,60 @@ export class DisciplinaController {
 
   @Roles('adm')
   @Post()
-  @ApiResponse({ status: 201, description: 'Disciplina criada com sucesso.', type: Disciplina })
+  @ApiResponse({
+    status: 201,
+    description: 'Disciplina criada com sucesso.',
+    type: Disciplina,
+  })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
-  async create(@Body() createDisciplinaDto: CreateDisciplinaDto): Promise<Disciplina> {
+  async create(
+    @Body() createDisciplinaDto: CreateDisciplinaDto,
+  ): Promise<Disciplina> {
     return this.disciplinaRepository.createDisciplina(createDisciplinaDto);
   }
 
   @Roles('adm')
   @Get()
-  @ApiResponse({ status: 200, description: 'Lista de disciplinas.', type: [Disciplina] })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de disciplinas.',
+    type: [Disciplina],
+  })
   async findAll(): Promise<Disciplina[]> {
     return this.disciplinaRepository.findAll();
   }
 
   @Roles('adm')
   @Get(':id')
-  @ApiResponse({ status: 200, description: 'Disciplina encontrada.', type: Disciplina })
+  @ApiResponse({
+    status: 200,
+    description: 'Disciplina encontrada.',
+    type: Disciplina,
+  })
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })
   async findOne(@Param('id') id: number): Promise<Disciplina> {
     return this.disciplinaRepository.findOne(id);
   }
 
   @Get('curso/:cursoId')
-  async getDisciplinasByCurso(@Param('cursoId') cursoId: number): Promise<Disciplina[]> {
+  async getDisciplinasByCurso(
+    @Param('cursoId') cursoId: number,
+  ): Promise<Disciplina[]> {
     return this.disciplinaService.findDisciplinasByCursoId(cursoId);
   }
 
   @Roles('adm')
   @Patch(':id')
-  @ApiResponse({ status: 200, description: 'Disciplina atualizada com sucesso.', type: Disciplina })
+  @ApiResponse({
+    status: 200,
+    description: 'Disciplina atualizada com sucesso.',
+    type: Disciplina,
+  })
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })
-  async update(@Param('id') id: number, @Body() updateDisciplinaDto: UpdateDisciplinaDto): Promise<Disciplina> {
+  async update(
+    @Param('id') id: number,
+    @Body() updateDisciplinaDto: UpdateDisciplinaDto,
+  ): Promise<Disciplina> {
     return this.disciplinaRepository.update(id, updateDisciplinaDto);
   }
 

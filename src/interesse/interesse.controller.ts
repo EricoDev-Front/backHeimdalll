@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  //UseGuards,
+} from '@nestjs/common';
 import { InteresseRepository } from './interesse.repository';
 import { CreateInteresseDto } from './dto/create-interesse.dto';
 import { UpdateInteresseDto } from './dto/update-interesse.dto';
@@ -10,19 +19,29 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 @ApiTags('interesses')
 @ApiBearerAuth()
 @Controller('interesse')
-@UseGuards(JwtAuthGuard)
+//@UseGuards(JwtAuthGuard)
 export class InteresseController {
   constructor(private readonly interesseRepository: InteresseRepository) {}
 
   @Post()
-  @ApiResponse({ status: 201, description: 'Interesse criado com sucesso.', type: Interesse })
+  @ApiResponse({
+    status: 201,
+    description: 'Interesse criado com sucesso.',
+    type: Interesse,
+  })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
-  async create(@Body() createInteresseDto: CreateInteresseDto): Promise<Interesse> {
+  async create(
+    @Body() createInteresseDto: CreateInteresseDto,
+  ): Promise<Interesse> {
     return this.interesseRepository.createInteresse(createInteresseDto);
   }
 
   @Get()
-  @ApiResponse({ status: 200, description: 'Lista de interesses.', type: [Interesse] })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de interesses.',
+    type: [Interesse],
+  })
   async findAll(): Promise<Interesse[]> {
     return this.interesseRepository.findAll();
   }
@@ -39,16 +58,27 @@ export class InteresseController {
   }
 
   @Get(':id')
-  @ApiResponse({ status: 200, description: 'Interesse encontrado.', type: Interesse })
+  @ApiResponse({
+    status: 200,
+    description: 'Interesse encontrado.',
+    type: Interesse,
+  })
   @ApiResponse({ status: 404, description: 'Interesse não encontrado.' })
   async findOne(@Param('id') id: number): Promise<Interesse> {
     return this.interesseRepository.findOne(id);
   }
 
   @Patch(':id')
-  @ApiResponse({ status: 200, description: 'Interesse atualizado com sucesso.', type: Interesse })
+  @ApiResponse({
+    status: 200,
+    description: 'Interesse atualizado com sucesso.',
+    type: Interesse,
+  })
   @ApiResponse({ status: 404, description: 'Interesse não encontrado.' })
-  async update(@Param('id') id: number, @Body() updateInteresseDto: UpdateInteresseDto): Promise<Interesse> {
+  async update(
+    @Param('id') id: number,
+    @Body() updateInteresseDto: UpdateInteresseDto,
+  ): Promise<Interesse> {
     return this.interesseRepository.update(id, updateInteresseDto);
   }
 

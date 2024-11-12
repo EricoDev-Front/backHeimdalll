@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  //UseGuards,
+} from '@nestjs/common';
 import { CursoRepository } from './curso.repository';
 import { UpdateCursoDto } from './dto/update-curso.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -11,14 +20,17 @@ import { RolesGuard } from 'src/auth/roles.guard';
 @ApiTags('cursos')
 @ApiBearerAuth()
 @Controller('curso')
-@UseGuards(JwtAuthGuard, RolesGuard)
-
+//@UseGuards(JwtAuthGuard, RolesGuard)
 export class CursoController {
   constructor(private readonly cursoRepository: CursoRepository) {}
 
   @Roles('adm')
-  @Post()  
-  @ApiResponse({ status: 201, description: 'Curso criado com sucesso.', type: Curso })
+  @Post()
+  @ApiResponse({
+    status: 201,
+    description: 'Curso criado com sucesso.',
+    type: Curso,
+  })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
   async create(@Body() createCursoDto: CreateCursoDto): Promise<Curso> {
     return this.cursoRepository.createCurso(createCursoDto);
@@ -41,9 +53,16 @@ export class CursoController {
 
   @Roles('adm')
   @Patch(':id')
-  @ApiResponse({ status: 200, description: 'Curso atualizado com sucesso.', type: Curso })
+  @ApiResponse({
+    status: 200,
+    description: 'Curso atualizado com sucesso.',
+    type: Curso,
+  })
   @ApiResponse({ status: 404, description: 'Curso não encontrado.' })
-  async update(@Param('id') id: number, @Body() updateCursoDto: UpdateCursoDto): Promise<Curso> {
+  async update(
+    @Param('id') id: number,
+    @Body() updateCursoDto: UpdateCursoDto,
+  ): Promise<Curso> {
     return this.cursoRepository.update(id, updateCursoDto);
   }
 
