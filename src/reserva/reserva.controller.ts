@@ -56,12 +56,14 @@ export class ReservaController {
     description: 'Reservas encontradas',
     type: [Reserva],
   })
-  @ApiResponse({ status: 404, description: 'Nenhuma reserva encontrada' })
   async getReservas(
     @Query('professorId') professorId?: number,
     @Query('turmaId') turmaId?: number,
   ): Promise<Reserva[]> {
-    return this.reservaRepository.findReservas(professorId, turmaId);
+    return this.reservaRepository.findReservas(
+      professorId ?? null,
+      turmaId ?? null,
+    );
   }
 
   @Get(':id')
