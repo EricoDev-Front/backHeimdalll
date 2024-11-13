@@ -51,6 +51,12 @@ export class ReservaController {
     type: Number,
     description: 'ID da turma para filtrar as reservas',
   })
+  @ApiQuery({
+    name: 'salaId',
+    required: false,
+    type: Number,
+    description: 'ID da sala para filtrar as reservas',
+  })
   @ApiResponse({
     status: 200,
     description: 'Reservas encontradas',
