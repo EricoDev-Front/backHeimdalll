@@ -1,4 +1,4 @@
-import { IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Periodo } from '../entities/turma.entity';
 import { Professor } from 'src/professor/entities/professor.entity';
@@ -13,4 +13,9 @@ export class ProfessoresByDisciplinaDto {
   @IsNumber()
   @IsNotEmpty()
   professores: Professor[];
+
+  @ApiProperty({ description: 'Periodo da turma' })
+  @IsString()
+  @IsNotEmpty()
+  periodo: string;
 }
