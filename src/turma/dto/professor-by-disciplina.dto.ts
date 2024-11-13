@@ -14,5 +14,5 @@ export class ProfessoresByDisciplinaDto {
     type: [Object],
   })
   @IsNotEmpty()
-  professores: Array<{ professor: Professor; periodo: string }>;
+  turmas: Array<{ professor: Professor; periodo: string }>;
 }

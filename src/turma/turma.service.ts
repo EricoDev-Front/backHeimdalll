@@ -14,15 +14,24 @@ export class TurmaService {
     return this.turmaRepository.createTurma(createTurmaDto);
   }
 
-  findAll(professor_id?: string, disciplina_id?: string, periodo?: string): Promise<Turma[]> {
+  findAll(
+    professor_id?: string,
+    disciplina_id?: string,
+    periodo?: string,
+  ): Promise<Turma[]> {
     return this.turmaRepository.findAll(professor_id, disciplina_id, periodo);
   }
 
-  async getProfessoresByDisciplinaId(disciplinaId: number): Promise<ProfessoresByDisciplinaDto> {
-    const professoresByDisciplinaDto = await this.turmaRepository.findProfessoresByDisciplinaId(disciplinaId);
-    
-    if (professoresByDisciplinaDto.professores.length === 0) {
-      throw new NotFoundException(`Nenhum professor encontrado para a disciplina com ID ${disciplinaId}`);
+  async getProfessoresByDisciplinaId(
+    disciplinaId: number,
+  ): Promise<ProfessoresByDisciplinaDto> {
+    const professoresByDisciplinaDto =
+      await this.turmaRepository.findProfessoresByDisciplinaId(disciplinaId);
+
+    if (professoresByDisciplinaDto.turmas.length === 0) {
+      throw new NotFoundException(
+        `Nenhum professor encontrado para a disciplina com ID ${disciplinaId}`,
+      );
     }
 
     return professoresByDisciplinaDto;
@@ -40,4 +49,3 @@ export class TurmaService {
     return this.turmaRepository.remove(id);
   }
 }
-

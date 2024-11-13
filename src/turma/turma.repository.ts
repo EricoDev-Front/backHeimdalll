@@ -173,14 +173,13 @@ export class TurmaRepository {
     }
 
     const turmaDto = new ProfessoresByDisciplinaDto();
-    turmaDto.professores = turmas.map((turma) => {
+    turmaDto.turmas = turmas.map((turma) => {
       return {
         professor: turma.professor,
         periodo: turma.periodo || 'Não disponível',
+        turma_id: turma.turma_id,
       };
     });
-
-    turmaDto.turma_id = turmas[0].turma_id;
 
     return turmaDto;
   }
