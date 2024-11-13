@@ -157,12 +157,13 @@ export class TurmaRepository {
 
     return query.getMany();
   }
+
   async findProfessoresByDisciplinaId(
     disciplinaId: number,
   ): Promise<ProfessoresByDisciplinaDto> {
     const turmas = await this.turmaRepository.find({
       where: { disciplina: { disciplina_id: disciplinaId } },
-      relations: ['professor', 'disciplina'], // Certifique-se de incluir a relação com a disciplina, se necessário
+      relations: ['professor', 'disciplina'],
     });
 
     if (turmas.length === 0) {
@@ -172,11 +173,14 @@ export class TurmaRepository {
     }
 
     const turmaDto = new ProfessoresByDisciplinaDto();
-    turmaDto.professores = turmas.map((turma) => turma.professor);
-    turmaDto.turma_id = turmas[0].turma_id;
+    turmaDto.professores = turmas.map((turma) => {
+      return {
+        professor: turma.professor,
+        periodo: turma.periodo || 'Não disponível',
+      };
+    });
 
-    // Supondo que o período esteja na turma ou na disciplina
-    turmaDto.periodo = turmas[0].periodo || 'Não disponível';
+    turmaDto.turma_id = turmas[0].turma_id;
 
     return turmaDto;
   }
