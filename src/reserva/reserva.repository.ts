@@ -14,7 +14,8 @@ import { Professor } from 'src/professor/entities/professor.entity';
 import { Sala } from 'src/sala/entities/sala.entity';
 import { Validacao } from 'src/validacao/entities/validacao.entity';
 import { CreateValidacaoDto } from 'src/validacao/dto/create-validacao.dto';
-import { addDays, format } from 'date-fns';
+import { addDays, format, isValid } from 'date-fns';
+import { parse } from 'date-fns';
 
 @Injectable()
 export class ReservaRepository {
@@ -234,60 +235,72 @@ export class ReservaRepository {
     });
   }
 
-  async updateReserva(updateReservaDto: UpdateReservaDto): Promise<Reserva> {
-    const { reserva_id, ...updateData } = updateReservaDto;
 
+  async updateReserva(updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+    const { reserva_id, dataInicio, dataFim, horaInicio, horaFim, ...updateData } = updateReservaDto;
+  
+    // Gerar os dias reservados a partir de dataInicio e dataFim
+    let diasReservados: string[] = [];
+    if (dataInicio && dataFim) {
+      diasReservados = this.gerarDiasReservados(dataInicio, dataFim);
+    }
+  
+    // Adiciona dias_reservados à atualização
+    const updateDataComDias: any = { ...updateData, dias_reservados: diasReservados };
+  
     // Busca a reserva existente pelo ID
     const reserva = await this.reservaRepository.findOne({
-      where: { reserva_id }, // Certifique-se de que está utilizando a propriedade correta
+      where: { reserva_id },
       relations: ['professor', 'sala', 'turma'], // Carrega as relações necessárias
     });
-
+  
     if (!reserva) {
       throw new Error('Reserva não encontrada');
     }
-
-    // Atualiza as propriedades da reserva com os dados do DTO
-    Object.assign(reserva, updateData);
-
+  
+    // Atualiza as propriedades da reserva com os dados do DTO, agora com dias_reservados
+    Object.assign(reserva, updateDataComDias);
+  
     // Verifica conflitos se as datas ou horários foram atualizados
-    const newDataInicio = updateData.dataInicio;
-    const newDataFinal = updateData.dataFim;
-    const newHoraInicio = updateData.horaInicio;
-    const newHoraFinal = updateData.horaFim;
-
-    const reservaConflitante = await this.reservaRepository
-      .createQueryBuilder('reserva')
-      .where('reserva.sala.sala_id = :salaId', { salaId: reserva.sala.sala_id }) // Acessa o ID da sala através do objeto
-      .andWhere('reserva.professor.professor_id = :professorId', {
-        professorId: reserva.professor.professor_id,
-      }) // Acessa o ID do professor
-      .andWhere('reserva.turma.turma_id = :turmaId', {
-        turmaId: reserva.turma.turma_id,
-      }) // Acessa o ID da turma
-      .andWhere(
-        '(' +
-          '(:dataInicio < reserva.data_final AND :dataFinal > reserva.data_inicio)' +
-          ')',
-        { dataInicio: newDataInicio, dataFinal: newDataFinal },
-      )
-      .andWhere(
-        '(' +
-          '(:horaInicio < reserva.hora_final AND :horaFinal > reserva.hora_inicio)' +
-          ')',
-        { horaInicio: newHoraInicio, horaFinal: newHoraFinal },
-      )
+    const reservaConflitante = await this.reservaRepository.createQueryBuilder('reserva')
+      .where('reserva.sala.sala_id = :salaId', { salaId: reserva.sala.sala_id })
+      .andWhere('reserva.professor.professor_id = :professorId', { professorId: reserva.professor.professor_id })
+      .andWhere('reserva.turma.turma_id = :turmaId', { turmaId: reserva.turma.turma_id })
+      .andWhere('(' +
+        '(:dataInicio < reserva.dias_reservados AND :dataFinal > reserva.dias_reservados)' +
+        ')', { dataInicio, dataFinal: dataFim })
+      .andWhere('(' +
+        '(:horaInicio < reserva.hora_final AND :horaFim > reserva.hora_inicio)' +
+        ')', { horaInicio, horaFim })
       .getOne();
-
+  
     if (reservaConflitante) {
-      throw new Error(
-        'Conflito de reserva: já existe uma reserva para esta sala, professor ou turma no mesmo horário.',
-      );
+      throw new Error('Conflito de reserva: já existe uma reserva para esta sala, professor ou turma no mesmo horário.');
     }
-
+  
     // Salva a reserva atualizada
     return await this.reservaRepository.save(reserva);
   }
+  
+  
+  
+  // Função para gerar os dias reservados entre `dataInicio` e `dataFim`
+  private gerarDiasReservados(dataInicio: string, dataFim: string): string[] {
+    const dataInicioObj = new Date(dataInicio);
+    const dataFimObj = new Date(dataFim);
+    
+    const diasReservados: string[] = [];
+    let currentDate = dataInicioObj;
+  
+    while (currentDate <= dataFimObj) {
+      diasReservados.push(currentDate.toISOString().split('T')[0]); // Adiciona a data no formato 'YYYY-MM-DD'
+      currentDate.setDate(currentDate.getDate() + 1); // Avança para o próximo dia
+    }
+  
+    return diasReservados;
+  }
+  
+  
 
   async remove(id: number): Promise<void> {
     await this.reservaRepository.delete(id);
