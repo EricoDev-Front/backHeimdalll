@@ -83,7 +83,9 @@ export class ReservaController {
     type: Reserva,
   })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
-  async update(@Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+  async update(
+    @Param('id') id: number,
+    @Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
     return this.reservaService.update(updateReservaDto);  // Usando o service
   }
 
