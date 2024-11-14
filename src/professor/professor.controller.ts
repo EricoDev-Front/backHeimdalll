@@ -7,6 +7,11 @@ import {
   Param,
   Delete,
   UseGuards,
+  UnauthorizedException,
+  HttpException,
+  HttpStatus,
+  NotFoundException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ProfessorService } from './professor.service';
 import { CreateProfessorDto } from './dto/create-professor.dto';
