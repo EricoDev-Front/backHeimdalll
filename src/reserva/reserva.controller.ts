@@ -7,13 +7,16 @@ import { Reserva } from './entities/reserva.entity';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { Roles } from 'src/auth/roles.decorator';
+import { ReservaRepository } from './reserva.repository';
 
 @ApiTags('reservas')
 @ApiBearerAuth()
 @Controller('reserva')
 //@UseGuards(JwtAuthGuard, RolesGuard)
 export class ReservaController {
-  constructor(private readonly reservaService: ReservaService) {}  // Atualizado para usar o service
+  constructor(private readonly reservaService: ReservaService,
+    private readonly reservaRepository: ReservaRepository,
+  ) {}  // Atualizado para usar o service
 
   @Roles('adm', 'professor')
   @Post()

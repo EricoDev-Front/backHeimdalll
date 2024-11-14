@@ -7,7 +7,7 @@ import {
   Patch,
   Param,
   Delete,
-  // UseGuards,
+  UseGuards,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
