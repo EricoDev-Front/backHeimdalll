@@ -7,10 +7,13 @@ import { AlunoController } from './aluno.controller';
 import { AlunoRepository } from './aluno.repository';
 import { AuthModule } from '../auth/auth.module';
 import { MailModule } from 'src/mail/mail.module';
+import { Turma } from 'src/turma/entities/turma.entity';
+import { Professor } from 'src/professor/entities/professor.entity';
+import { Disciplina } from 'src/disciplina/entities/disciplina.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Aluno]),
+    TypeOrmModule.forFeature([Aluno, Turma, Professor, Disciplina]),
     forwardRef(() => AuthModule),
     MailModule,
   ],

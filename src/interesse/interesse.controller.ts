@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
   //UseGuards,
 } from '@nestjs/common';
 import { InteresseRepository } from './interesse.repository';
@@ -19,7 +20,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 @ApiTags('interesses')
 @ApiBearerAuth()
 @Controller('interesse')
-//@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class InteresseController {
   constructor(private readonly interesseRepository: InteresseRepository) {}
 

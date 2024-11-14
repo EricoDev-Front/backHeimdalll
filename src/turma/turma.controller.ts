@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
   //UseGuards,
 } from '@nestjs/common';
 import { TurmaRepository } from './turma.repository';
@@ -32,14 +33,14 @@ import { ProfessoresByDisciplinaDto } from './dto/professor-by-disciplina.dto';
 @ApiTags('turmas')
 @ApiBearerAuth()
 @Controller('turma')
-//@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class TurmaController {
   constructor(
     private readonly turmaRepository: TurmaRepository,
     private readonly turmaService: TurmaService,
   ) {}
 
-  @Roles('adm')
+  
   @Post()
   @ApiResponse({
     status: 201,
@@ -51,7 +52,6 @@ export class TurmaController {
     return this.turmaRepository.createTurma(createTurmaDto);
   }
 
-  @Roles('adm', 'professor')
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de turmas.', type: [Turma] })
   @ApiQuery({
@@ -80,7 +80,6 @@ export class TurmaController {
     return this.turmaRepository.findAll(professor_id, disciplina_id, periodo);
   }
 
-  //@Roles('adm', 'professor')
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Turma encontrada.', type: Turma })
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
@@ -88,7 +87,6 @@ export class TurmaController {
     return this.turmaRepository.findOne(id);
   }
 
-  //@Roles('adm', 'professor')
   @Get('disciplina/:disciplinaId/professores')
   async getProfessoresByDisciplina(
     @Param('disciplinaId') disciplinaId: number,
@@ -96,7 +94,7 @@ export class TurmaController {
     return this.turmaService.getProfessoresByDisciplinaId(disciplinaId);
   }
 
-  @Roles('adm')
+  
   @Patch(':id')
   @ApiResponse({
     status: 200,
@@ -111,7 +109,7 @@ export class TurmaController {
     return this.turmaRepository.update(id, updateTurmaDto);
   }
 
-  @Roles('adm')
+  
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Turma deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })

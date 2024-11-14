@@ -23,7 +23,7 @@ import { Roles } from 'src/auth/roles.decorator';
 @ApiTags('alunos')
 @ApiBearerAuth()
 @Controller('aluno')
-//@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e o RolesGuard para todas as rotas
+@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e o RolesGuard para todas as rotas
 export class AlunoController {
   constructor(private readonly alunoService: AlunoService) {}
 
@@ -43,14 +43,14 @@ export class AlunoController {
   }
 
   @Get()
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 200, description: 'Lista de alunos.', type: [Aluno] })
   async findAll(): Promise<Aluno[]> {
     return this.alunoService.findAll();
   }
 
   @Get(':id')
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 200, description: 'Aluno encontrado.', type: Aluno })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
   async findOne(@Param('id') id: number): Promise<Aluno> {
@@ -58,7 +58,7 @@ export class AlunoController {
   }
 
   @Patch(':id')
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({
     status: 200,
     description: 'Aluno atualizado com sucesso.',
@@ -73,7 +73,7 @@ export class AlunoController {
   }
 
   @Delete(':id')
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 204, description: 'Aluno deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Aluno não encontrado.' })
   async remove(@Param('id') id: number): Promise<void> {

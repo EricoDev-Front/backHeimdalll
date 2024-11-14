@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
   //UseGuards,
 } from '@nestjs/common';
 import { CursoRepository } from './curso.repository';
@@ -20,11 +21,10 @@ import { RolesGuard } from 'src/auth/roles.guard';
 @ApiTags('cursos')
 @ApiBearerAuth()
 @Controller('curso')
-//@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class CursoController {
   constructor(private readonly cursoRepository: CursoRepository) {}
 
-  @Roles('adm')
   @Post()
   @ApiResponse({
     status: 201,
@@ -51,7 +51,6 @@ export class CursoController {
     return this.cursoRepository.findOne(id);
   }
 
-  @Roles('adm')
   @Patch(':id')
   @ApiResponse({
     status: 200,
@@ -66,7 +65,6 @@ export class CursoController {
     return this.cursoRepository.update(id, updateCursoDto);
   }
 
-  @Roles('adm')
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Curso deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Curso não encontrado.' })

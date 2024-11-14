@@ -49,8 +49,9 @@ export class AlunoService {
   async update(id: number, updateAlunoDto: UpdateAlunoDto): Promise<Aluno> {
     const aluno = await this.findOne(id);
 
+    const isNewPassword = await bcrypt.compare(updateAlunoDto.senha, aluno.senha);
     // Verificar se a senha foi alterada e fazer o hash
-    if (updateAlunoDto.senha) {
+    if (isNewPassword) {
       updateAlunoDto.senha = await this.hashPassword(updateAlunoDto.senha);
     }
 
@@ -74,7 +75,6 @@ export class AlunoService {
   }
 
   async remove(id: number): Promise<void> {
-    const aluno = await this.findOne(id); // Valida se o aluno existe antes de remover
-    await this.alunoRepository.remove(id);
+    await this.alunoRepository.removeAlunoWithTurmas(id);
   }
 }

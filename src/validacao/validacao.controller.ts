@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
   //UseGuards,
 } from '@nestjs/common';
 import { ValidacaoRepository } from './validacao.repository';
@@ -28,7 +29,7 @@ import { Roles } from 'src/auth/roles.decorator';
 @ApiTags('validacoes')
 @ApiBearerAuth()
 @Controller('validacao')
-//@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class ValidacaoController {
   constructor(private readonly validacaoRepository: ValidacaoRepository) {}
 
@@ -68,7 +69,7 @@ export class ValidacaoController {
     );
   }
 
-  //@Roles('adm')
+  //
   @Get()
   @ApiResponse({
     status: 200,
@@ -79,7 +80,7 @@ export class ValidacaoController {
     return this.validacaoRepository.findAll();
   }
 
-  //@Roles('adm')
+  //
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -91,7 +92,7 @@ export class ValidacaoController {
     return this.validacaoRepository.findOne(id);
   }
 
-  @Roles('adm')
+  
   @Patch(':id')
   @ApiResponse({
     status: 200,
@@ -106,7 +107,7 @@ export class ValidacaoController {
     return this.validacaoRepository.update(id, updateValidacaoDto);
   }
 
-  @Roles('adm')
+  
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Validação deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Validação não encontrada.' })

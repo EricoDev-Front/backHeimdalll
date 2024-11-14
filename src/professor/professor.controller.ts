@@ -30,7 +30,7 @@ export class ProfessorController {
   constructor(private readonly professorService: ProfessorService) {}
 
   @Post()
-  //@UseGuards()
+  @UseGuards()
   @ApiResponse({
     status: 201,
     description: 'Professor criado com sucesso.',
@@ -47,9 +47,8 @@ export class ProfessorController {
     }
   }
 
-  //@Roles('professor', 'adm')
   @Get()
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({
     status: 200,
     description: 'Lista de professores.',
@@ -59,9 +58,8 @@ export class ProfessorController {
     return this.professorService.findAll();
   }
 
-  //@Roles('professor', 'adm')
   @Get(':id')
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({
     status: 200,
     description: 'Professor encontrado.',
@@ -72,9 +70,8 @@ export class ProfessorController {
     return this.professorService.findOne(id);
   }
 
-  @Roles('professor', 'adm')
   @Patch(':id')
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({
     status: 200,
     description: 'Professor atualizado com sucesso.',
@@ -92,9 +89,8 @@ export class ProfessorController {
     }
   }
 
-  @Roles('professor', 'adm')
   @Delete(':id')
-  //@UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiResponse({ status: 204, description: 'Professor deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Professor não encontrado.' })
   async remove(@Param('id') id: number): Promise<void> {

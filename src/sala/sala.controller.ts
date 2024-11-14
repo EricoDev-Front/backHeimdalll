@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
   //UseGuards,
 } from '@nestjs/common';
 import { SalaService } from './sala.service';
@@ -20,11 +21,10 @@ import { Roles } from 'src/auth/roles.decorator';
 @ApiTags('salas')
 @ApiBearerAuth()
 @Controller('sala')
-//@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e RolesGuard para todas as rotas
+@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e RolesGuard para todas as rotas
 export class SalaController {
   constructor(private readonly salaService: SalaService) {}
 
-  @Roles('adm')
   @Post()
   @ApiResponse({
     status: 201,
@@ -36,14 +36,14 @@ export class SalaController {
     return await this.salaService.create(createSalaDto); // Retorna a sala criada
   }
 
-  //@Roles('adm')
+  //
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de salas.', type: [Sala] })
   async findAll(): Promise<Sala[]> {
     return await this.salaService.findAll(); // Retorna a lista de salas
   }
 
-  //@Roles('adm')
+  //
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Sala encontrada.', type: Sala })
   @ApiResponse({ status: 404, description: 'Sala não encontrada.' })
@@ -51,7 +51,7 @@ export class SalaController {
     return await this.salaService.findOne(id); // Retorna a sala encontrada
   }
 
-  @Roles('adm')
+  
   @Patch(':id')
   @ApiResponse({
     status: 200,
@@ -66,7 +66,7 @@ export class SalaController {
     return await this.salaService.update(id, updateSalaDto); // Retorna a sala atualizada
   }
 
-  @Roles('adm')
+  
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Sala deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Sala não encontrada.' })

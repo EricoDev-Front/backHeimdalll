@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
   //UseGuards,
 } from '@nestjs/common';
 import { DisciplinaRepository } from './disciplina.repository';
@@ -21,14 +22,13 @@ import { Roles } from 'src/auth/roles.decorator';
 @ApiTags('disciplinas')
 @ApiBearerAuth()
 @Controller('disciplina')
-//@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class DisciplinaController {
   constructor(
     private readonly disciplinaRepository: DisciplinaRepository,
     private readonly disciplinaService: DisciplinaService,
   ) {}
 
-  @Roles('adm')
   @Post()
   @ApiResponse({
     status: 201,
@@ -42,7 +42,6 @@ export class DisciplinaController {
     return this.disciplinaRepository.createDisciplina(createDisciplinaDto);
   }
 
-  //@Roles('adm')
   @Get()
   @ApiResponse({
     status: 200,
@@ -53,7 +52,6 @@ export class DisciplinaController {
     return this.disciplinaRepository.findAll();
   }
 
-  //@Roles('adm')
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -72,7 +70,6 @@ export class DisciplinaController {
     return this.disciplinaService.findDisciplinasByCursoId(cursoId);
   }
 
-  @Roles('adm')
   @Patch(':id')
   @ApiResponse({
     status: 200,
@@ -87,7 +84,6 @@ export class DisciplinaController {
     return this.disciplinaRepository.update(id, updateDisciplinaDto);
   }
 
-  @Roles('adm')
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Disciplina deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })

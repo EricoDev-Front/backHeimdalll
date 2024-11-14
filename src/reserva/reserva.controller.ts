@@ -12,13 +12,12 @@ import { ReservaRepository } from './reserva.repository';
 @ApiTags('reservas')
 @ApiBearerAuth()
 @Controller('reserva')
-//@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class ReservaController {
   constructor(private readonly reservaService: ReservaService,
     private readonly reservaRepository: ReservaRepository,
   ) {}  // Atualizado para usar o service
 
-  @Roles('adm', 'professor')
   @Post()
   @ApiResponse({
     status: 201,
@@ -77,7 +76,6 @@ export class ReservaController {
     return this.reservaService.findOne(id);  // Usando o service
   }
 
-  @Roles('adm', 'professor')
   @Put()
   @ApiResponse({
     status: 200,
@@ -89,7 +87,6 @@ export class ReservaController {
     return this.reservaService.update(updateReservaDto);  // Usando o service
   }
 
-  @Roles('adm', 'professor')
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Reserva deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
