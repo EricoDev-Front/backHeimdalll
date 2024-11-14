@@ -11,32 +11,64 @@ import { Roles } from 'src/auth/roles.decorator';
 @ApiTags('reservas')
 @ApiBearerAuth()
 @Controller('reserva')
-@UseGuards(JwtAuthGuard, RolesGuard)
+//@UseGuards(JwtAuthGuard, RolesGuard)
 export class ReservaController {
   constructor(private readonly reservaService: ReservaService) {}  // Atualizado para usar o service
 
   @Roles('adm', 'professor')
   @Post()
-  @ApiResponse({ status: 201, description: 'Reserva criada com sucesso.', type: Reserva })
+  @ApiResponse({
+    status: 201,
+    description: 'Reserva criada com sucesso.',
+    type: Reserva,
+  })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
   async create(@Body() createReservaDto: CreateReservaDto): Promise<Reserva> {
     return this.reservaService.createReserva(createReservaDto);  // Usando o service
   }
 
   @Get()
-  @ApiQuery({ name: 'professorId', required: false, type: Number, description: 'ID do professor para filtrar as reservas' })
-  @ApiQuery({ name: 'turmaId', required: false, type: Number, description: 'ID da turma para filtrar as reservas' })
-  @ApiResponse({ status: 200, description: 'Reservas encontradas', type: [Reserva] })
-  @ApiResponse({ status: 404, description: 'Nenhuma reserva encontrada' })
+  @ApiQuery({
+    name: 'professorId',
+    required: false,
+    type: Number,
+    description: 'ID do professor para filtrar as reservas',
+  })
+  @ApiQuery({
+    name: 'turmaId',
+    required: false,
+    type: Number,
+    description: 'ID da turma para filtrar as reservas',
+  })
+  @ApiQuery({
+    name: 'salaId',
+    required: false,
+    type: Number,
+    description: 'ID da sala para filtrar as reservas',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Reservas encontradas',
+    type: [Reserva],
+  })
   async getReservas(
     @Query('professorId') professorId?: number,
     @Query('turmaId') turmaId?: number,
+    @Query('salaId') salaId?: number,
   ): Promise<Reserva[]> {
-    return this.reservaService.findReservas(professorId, turmaId);  // Usando o service
+    return this.reservaRepository.findReservas(
+      professorId ?? null,
+      turmaId ?? null,
+      salaId ?? null,
+    );
   }
 
   @Get(':id')
-  @ApiResponse({ status: 200, description: 'Reserva encontrada.', type: Reserva })
+  @ApiResponse({
+    status: 200,
+    description: 'Reserva encontrada.',
+    type: Reserva,
+  })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
   async findOne(@Param('id') id: number): Promise<Reserva> {
     return this.reservaService.findOne(id);  // Usando o service
@@ -44,7 +76,11 @@ export class ReservaController {
 
   @Roles('adm', 'professor')
   @Put()
-  @ApiResponse({ status: 200, description: 'Reserva atualizada com sucesso.', type: Reserva })
+  @ApiResponse({
+    status: 200,
+    description: 'Reserva atualizada com sucesso.',
+    type: Reserva,
+  })
   @ApiResponse({ status: 404, description: 'Reserva não encontrada.' })
   async update(@Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
     return this.reservaService.update(updateReservaDto);  // Usando o service
