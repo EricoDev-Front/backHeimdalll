@@ -24,14 +24,14 @@ export class CursoController {
     return this.cursoRepository.createCurso(createCursoDto);
   }
 
-  //@Roles('adm')
+
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de cursos.', type: [Curso] })
   async findAll(): Promise<Curso[]> {
     return this.cursoRepository.findAll();
   }
 
-  //@Roles('adm')
+
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Curso encontrado.', type: Curso })
   @ApiResponse({ status: 404, description: 'Curso não encontrado.' })

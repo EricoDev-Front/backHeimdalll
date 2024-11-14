@@ -20,11 +20,11 @@ import { Roles } from 'src/auth/roles.decorator';
 @ApiTags('alunos')
 @ApiBearerAuth()
 @Controller('aluno')
-@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e RolesGuard para todas as rotas
 export class AlunoController {
   constructor(private readonly alunoService: AlunoService) {}
 
   @Post()
+  @UseGuards()
   @ApiResponse({ status: 201, description: 'Aluno criado com sucesso.', type: Aluno })
   @ApiResponse({ status: 400, description: 'Erro de validação. Email já cadastrado.' })
   async create(@Body() createAlunoDto: CreateAlunoDto): Promise<Aluno> {
