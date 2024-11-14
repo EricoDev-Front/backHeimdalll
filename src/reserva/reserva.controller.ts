@@ -76,7 +76,7 @@ export class ReservaController {
     return this.reservaService.findOne(id);  // Usando o service
   }
 
-  @Put()
+  @Patch(':id')
   @ApiResponse({
     status: 200,
     description: 'Reserva atualizada com sucesso.',
