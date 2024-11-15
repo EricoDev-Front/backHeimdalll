@@ -24,7 +24,12 @@ export class ProfessorService {
 
     const hashedPassword = await this.hashPassword(createProfessorDto.senha);
     const professor = { ...createProfessorDto, senha: hashedPassword };
+    if(!professor.adm){
     return this.professorRepository.createProfessor(professor);
+    }else{
+    professor.status = true;
+    return this.professorRepository.createProfessor(professor);
+    }
   }
 
   async validatePassword(password: string, hashedPassword: string): Promise<boolean> {
