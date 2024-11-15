@@ -14,7 +14,6 @@ export class ProfessorRepository {
   ) {}
 
   async createProfessor(createProfessorDto: CreateProfessorDto): Promise<Professor> {
-    createProfessorDto.status = false;
     const newProfessor = this.professorRepository.create(createProfessorDto);
     return this.professorRepository.save(newProfessor);
   }

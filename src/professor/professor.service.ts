@@ -25,9 +25,10 @@ export class ProfessorService {
     const hashedPassword = await this.hashPassword(createProfessorDto.senha);
     var professor = { ...createProfessorDto, senha: hashedPassword };
     if(!professor.adm){
+      professor.status = false;
     return this.professorRepository.createProfessor(professor);
     }else{
-    professor = {...professor, status: true };	
+      professor.status = true;
     return this.professorRepository.createProfessor(professor);
     }
   }
