@@ -34,7 +34,7 @@ export class AuthService {
   
       // Verifica se o professor está ativo
       if (!person.status) {
-        throw new ForbiddenException('Conta de professor inativa');
+        throw new UnauthorizedException('Conta de professor inativa');
       }
     } else {
       // Caso não encontre na tabela de professores, tenta buscar na tabela de alunos
@@ -44,7 +44,7 @@ export class AuthService {
   
         // Verifica se o aluno está ativo
         if (!person.status) {
-          throw new ForbiddenException('Conta de aluno inativa');
+          throw new UnauthorizedException('Conta de aluno inativa');
         }
       }
     }
