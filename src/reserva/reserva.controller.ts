@@ -86,7 +86,7 @@ export class ReservaController {
   async update(
     @Param('id') id: number,
     @Body() updateReservaDto: UpdateReservaDto): Promise<Reserva> {
-    return this.reservaService.update(updateReservaDto);  // Usando o service
+    return this.reservaService.update(id, updateReservaDto);  // Usando o service
   }
 
   @Delete(':id')

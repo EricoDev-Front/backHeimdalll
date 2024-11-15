@@ -236,7 +236,7 @@ export class ReservaRepository {
   }
 
 
-  async updateReserva(updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+  async updateReserva(id: number, updateReservaDto: UpdateReservaDto): Promise<Reserva> {
     const { reserva_id, dataInicio, dataFim, horaInicio, horaFim, ...updateData } = updateReservaDto;
   
     // Gerar os dias reservados a partir de dataInicio e dataFim
@@ -277,7 +277,9 @@ export class ReservaRepository {
     if (reservaConflitante) {
       throw new Error('Conflito de reserva: já existe uma reserva para esta sala, professor ou turma no mesmo horário.');
     }
-  
+    
+    await this.reservaRepository.update(reserva.reserva_id, reserva);
+
     // Salva a reserva atualizada
     return await this.reservaRepository.save(reserva);
   }

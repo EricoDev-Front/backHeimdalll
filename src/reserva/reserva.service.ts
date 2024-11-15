@@ -63,8 +63,8 @@ export class ReservaService {
     return this.reservaRepository.findOne(id);
   }
 
-  update(updateReservaDto: UpdateReservaDto): Promise<Reserva> {
-    return this.reservaRepository.updateReserva(updateReservaDto);
+  update(id: number, updateReservaDto: UpdateReservaDto): Promise<Reserva> {
+    return this.reservaRepository.updateReserva(id, updateReservaDto);
   }
 
   remove(id: number): Promise<void> {
