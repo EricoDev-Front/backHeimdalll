@@ -22,7 +22,7 @@ export class DisciplinaService {
 
   async findDisciplinasByCursoId(cursoId: number): Promise<Disciplina[]> {
     const disciplinas = await this.disciplinaRepository.findByCursoId(cursoId);
-    
+
     if (disciplinas.length === 0) {
       throw new NotFoundException(`Nenhuma disciplina encontrada para o curso com ID ${cursoId}`);
     }

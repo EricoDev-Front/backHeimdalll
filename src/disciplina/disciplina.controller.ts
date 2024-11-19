@@ -7,27 +7,21 @@ import {
   Param,
   Delete,
   UseGuards,
-  //UseGuards,
 } from '@nestjs/common';
-import { DisciplinaRepository } from './disciplina.repository';
-import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
-import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Disciplina } from './entities/disciplina.entity';
 import { DisciplinaService } from './disciplina.service';
+import { CreateDisciplinaDto } from './dto/create-disciplina.dto';
+import { UpdateDisciplinaDto } from './dto/update-disciplina.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
-import { Roles } from 'src/auth/roles.decorator';
 
 @ApiTags('disciplinas')
 @ApiBearerAuth()
 @Controller('disciplina')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class DisciplinaController {
-  constructor(
-    private readonly disciplinaRepository: DisciplinaRepository,
-    private readonly disciplinaService: DisciplinaService,
-  ) {}
+  constructor(private readonly disciplinaService: DisciplinaService) {} // Usando o service
 
   @Post()
   @ApiResponse({
@@ -39,7 +33,7 @@ export class DisciplinaController {
   async create(
     @Body() createDisciplinaDto: CreateDisciplinaDto,
   ): Promise<Disciplina> {
-    return this.disciplinaRepository.createDisciplina(createDisciplinaDto);
+    return this.disciplinaService.create(createDisciplinaDto); // Chama o service
   }
 
   @Get()
@@ -49,7 +43,7 @@ export class DisciplinaController {
     type: [Disciplina],
   })
   async findAll(): Promise<Disciplina[]> {
-    return this.disciplinaRepository.findAll();
+    return this.disciplinaService.findAll(); // Chama o service
   }
 
   @Get(':id')
@@ -60,14 +54,14 @@ export class DisciplinaController {
   })
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })
   async findOne(@Param('id') id: number): Promise<Disciplina> {
-    return this.disciplinaRepository.findOne(id);
+    return this.disciplinaService.findOne(id); // Chama o service
   }
 
   @Get('curso/:cursoId')
   async getDisciplinasByCurso(
     @Param('cursoId') cursoId: number,
   ): Promise<Disciplina[]> {
-    return this.disciplinaService.findDisciplinasByCursoId(cursoId);
+    return this.disciplinaService.findDisciplinasByCursoId(cursoId); // Chama o service
   }
 
   @Patch(':id')
@@ -81,13 +75,13 @@ export class DisciplinaController {
     @Param('id') id: number,
     @Body() updateDisciplinaDto: UpdateDisciplinaDto,
   ): Promise<Disciplina> {
-    return this.disciplinaRepository.update(id, updateDisciplinaDto);
+    return this.disciplinaService.update(id, updateDisciplinaDto); // Chama o service
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Disciplina deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Disciplina não encontrada.' })
   async remove(@Param('id') id: number): Promise<void> {
-    return this.disciplinaRepository.remove(id);
+    return this.disciplinaService.remove(id); // Chama o service
   }
 }

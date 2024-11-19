@@ -27,4 +27,8 @@ export class InteresseService {
   remove(id: number): Promise<void> {
     return this.interesseRepository.remove(id);
   }
+
+  findAlunosPorTurma(turmaId: number) {
+    return this.interesseRepository.findAlunosPorTurma(turmaId);
+  }
 }

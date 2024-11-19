@@ -1,21 +1,10 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-  //UseGuards,
-} from '@nestjs/common';
-import { CursoRepository } from './curso.repository';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { CursoService } from './curso.service'; // Importando o service
 import { UpdateCursoDto } from './dto/update-curso.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Curso } from './entities/curso.entity';
+import { Curso } from '../curso/entities/curso.entity';
 import { CreateCursoDto } from './dto/create-curso.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
-import { Roles } from 'src/auth/roles.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
 
 @ApiTags('cursos')
@@ -23,7 +12,7 @@ import { RolesGuard } from 'src/auth/roles.guard';
 @Controller('curso')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class CursoController {
-  constructor(private readonly cursoRepository: CursoRepository) {}
+  constructor(private readonly cursoService: CursoService) {} // Usando o service
 
   @Post()
   @ApiResponse({
@@ -33,22 +22,20 @@ export class CursoController {
   })
   @ApiResponse({ status: 400, description: 'Erro de validação.' })
   async create(@Body() createCursoDto: CreateCursoDto): Promise<Curso> {
-    return this.cursoRepository.createCurso(createCursoDto);
+    return this.cursoService.create(createCursoDto); // Usando o service
   }
-
 
   @Get()
   @ApiResponse({ status: 200, description: 'Lista de cursos.', type: [Curso] })
   async findAll(): Promise<Curso[]> {
-    return this.cursoRepository.findAll();
+    return this.cursoService.findAll(); // Usando o service
   }
-
 
   @Get(':id')
   @ApiResponse({ status: 200, description: 'Curso encontrado.', type: Curso })
   @ApiResponse({ status: 404, description: 'Curso não encontrado.' })
   async findOne(@Param('id') id: number): Promise<Curso> {
-    return this.cursoRepository.findOne(id);
+    return this.cursoService.findOne(id); // Usando o service
   }
 
   @Patch(':id')
@@ -58,17 +45,14 @@ export class CursoController {
     type: Curso,
   })
   @ApiResponse({ status: 404, description: 'Curso não encontrado.' })
-  async update(
-    @Param('id') id: number,
-    @Body() updateCursoDto: UpdateCursoDto,
-  ): Promise<Curso> {
-    return this.cursoRepository.update(id, updateCursoDto);
+  async update(@Param('id') id: number, @Body() updateCursoDto: UpdateCursoDto): Promise<Curso> {
+    return this.cursoService.update(id, updateCursoDto); // Usando o service
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Curso deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Curso não encontrado.' })
   async remove(@Param('id') id: number): Promise<void> {
-    return this.cursoRepository.remove(id);
+    return this.cursoService.remove(id); // Usando o service
   }
 }

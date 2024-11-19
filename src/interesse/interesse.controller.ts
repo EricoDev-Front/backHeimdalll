@@ -7,9 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
-  //UseGuards,
 } from '@nestjs/common';
-import { InteresseRepository } from './interesse.repository';
+import { InteresseService } from './interesse.service';
 import { CreateInteresseDto } from './dto/create-interesse.dto';
 import { UpdateInteresseDto } from './dto/update-interesse.dto';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -22,7 +21,7 @@ import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 @Controller('interesse')
 @UseGuards(JwtAuthGuard)
 export class InteresseController {
-  constructor(private readonly interesseRepository: InteresseRepository) {}
+  constructor(private readonly interesseService: InteresseService) {}
 
   @Post()
   @ApiResponse({
@@ -34,7 +33,7 @@ export class InteresseController {
   async create(
     @Body() createInteresseDto: CreateInteresseDto,
   ): Promise<Interesse> {
-    return this.interesseRepository.createInteresse(createInteresseDto);
+    return this.interesseService.create(createInteresseDto);
   }
 
   @Get()
@@ -44,18 +43,18 @@ export class InteresseController {
     type: [Interesse],
   })
   async findAll(): Promise<Interesse[]> {
-    return this.interesseRepository.findAll();
+    return this.interesseService.findAll();
   }
 
   @Get('turma/:turmaId/alunos')
   @ApiResponse({
     status: 200,
     description: 'Lista de alunos interessados na turma especificada.',
-    type: [Aluno], // Indica que o retorno é um array de Aluno
+    type: [Aluno],
   })
   @ApiResponse({ status: 404, description: 'Turma não encontrada.' })
   async getAlunosPorTurma(@Param('turmaId') turmaId: number): Promise<Aluno[]> {
-    return this.interesseRepository.findAlunosPorTurma(turmaId);
+    return this.interesseService.findAlunosPorTurma(turmaId);
   }
 
   @Get(':id')
@@ -66,7 +65,7 @@ export class InteresseController {
   })
   @ApiResponse({ status: 404, description: 'Interesse não encontrado.' })
   async findOne(@Param('id') id: number): Promise<Interesse> {
-    return this.interesseRepository.findOne(id);
+    return this.interesseService.findOne(id);
   }
 
   @Patch(':id')
@@ -80,13 +79,13 @@ export class InteresseController {
     @Param('id') id: number,
     @Body() updateInteresseDto: UpdateInteresseDto,
   ): Promise<Interesse> {
-    return this.interesseRepository.update(id, updateInteresseDto);
+    return this.interesseService.update(id, updateInteresseDto);
   }
 
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Interesse deletado com sucesso.' })
   @ApiResponse({ status: 404, description: 'Interesse não encontrado.' })
   async remove(@Param('id') id: number): Promise<void> {
-    return this.interesseRepository.remove(id);
+    return this.interesseService.remove(id);
   }
 }

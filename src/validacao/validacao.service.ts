@@ -3,6 +3,7 @@ import { ValidacaoRepository } from './validacao.repository';
 import { CreateValidacaoDto } from './dto/create-validacao.dto';
 import { UpdateValidacaoDto } from './dto/update-validacao.dto';
 import { Validacao } from './entities/validacao.entity';
+import { ToggleValidacaoDto } from './dto/toggle-reserva.dto';
 
 @Injectable()
 export class ValidacaoService {
@@ -27,5 +28,8 @@ export class ValidacaoService {
   remove(id: number): Promise<void> {
     return this.validacaoRepository.remove(id);
   }
+
+  toggleValidacao(toggleValidacaoDtos: ToggleValidacaoDto[]): Promise<string[]> {
+    return this.validacaoRepository.toggleValidacaoByReservaIds(toggleValidacaoDtos);
+  }
 }
-  

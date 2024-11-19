@@ -1,4 +1,4 @@
-import { Curso } from 'src/curso/entities/curso.entity';
+import { Curso } from '../../curso/entities/curso.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity()

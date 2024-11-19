@@ -7,9 +7,8 @@ import {
   Param,
   Delete,
   UseGuards,
-  //UseGuards,
 } from '@nestjs/common';
-import { ValidacaoRepository } from './validacao.repository';
+import { ValidacaoService } from './validacao.service';
 import { CreateValidacaoDto } from './dto/create-validacao.dto';
 import { UpdateValidacaoDto } from './dto/update-validacao.dto';
 import {
@@ -21,7 +20,6 @@ import {
 } from '@nestjs/swagger';
 import { Validacao } from './entities/validacao.entity';
 import { ToggleValidacaoDto } from './dto/toggle-reserva.dto';
-import { use } from 'passport';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
@@ -31,7 +29,7 @@ import { Roles } from 'src/auth/roles.decorator';
 @Controller('validacao')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class ValidacaoController {
-  constructor(private readonly validacaoRepository: ValidacaoRepository) {}
+  constructor(private readonly validacaoService: ValidacaoService) {}
 
   @Post()
   @ApiResponse({
@@ -43,7 +41,7 @@ export class ValidacaoController {
   async create(
     @Body() createValidacaoDto: CreateValidacaoDto,
   ): Promise<Validacao> {
-    return this.validacaoRepository.createValidacao(createValidacaoDto);
+    return this.validacaoService.create(createValidacaoDto);
   }
 
   @Post('toggle')
@@ -64,12 +62,9 @@ export class ValidacaoController {
   async toggleValidacao(
     @Body() toggleValidacaoDtos: ToggleValidacaoDto[],
   ): Promise<string[]> {
-    return this.validacaoRepository.toggleValidacaoByReservaIds(
-      toggleValidacaoDtos,
-    );
+    return this.validacaoService.toggleValidacao(toggleValidacaoDtos);
   }
 
-  //
   @Get()
   @ApiResponse({
     status: 200,
@@ -77,10 +72,9 @@ export class ValidacaoController {
     type: [Validacao],
   })
   async findAll(): Promise<Validacao[]> {
-    return this.validacaoRepository.findAll();
+    return this.validacaoService.findAll();
   }
 
-  //
   @Get(':id')
   @ApiResponse({
     status: 200,
@@ -89,10 +83,9 @@ export class ValidacaoController {
   })
   @ApiResponse({ status: 404, description: 'Validação não encontrada.' })
   async findOne(@Param('id') id: number): Promise<Validacao> {
-    return this.validacaoRepository.findOne(id);
+    return this.validacaoService.findOne(id);
   }
 
-  
   @Patch(':id')
   @ApiResponse({
     status: 200,
@@ -104,14 +97,13 @@ export class ValidacaoController {
     @Param('id') id: number,
     @Body() updateValidacaoDto: UpdateValidacaoDto,
   ): Promise<Validacao> {
-    return this.validacaoRepository.update(id, updateValidacaoDto);
+    return this.validacaoService.update(id, updateValidacaoDto);
   }
 
-  
   @Delete(':id')
   @ApiResponse({ status: 204, description: 'Validação deletada com sucesso.' })
   @ApiResponse({ status: 404, description: 'Validação não encontrada.' })
   async remove(@Param('id') id: number): Promise<void> {
-    return this.validacaoRepository.remove(id);
+    return this.validacaoService.remove(id);
   }
 }
