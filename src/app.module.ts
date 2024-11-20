@@ -20,6 +20,7 @@ import { ValidacaoModule } from './validacao/validacao.module';
 import { Validacao } from './validacao/entities/validacao.entity';
 import { AlunoModule } from './aluno/aluno.module';
 import { AuthModule } from './auth/auth.module';
+import { SuporteModule } from './suporte/suporte.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { AuthModule } from './auth/auth.module';
     ValidacaoModule,
     AlunoModule,
     AuthModule,
+    SuporteModule,
   ],
   controllers: [AppController],
   providers: [AppService],
