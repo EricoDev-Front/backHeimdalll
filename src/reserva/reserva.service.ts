@@ -6,6 +6,7 @@ import { Reserva } from './entities/reserva.entity';
 import { TurmaRepository } from 'src/turma/turma.repository';
 import { MailService } from 'src/mail/mail.service';
 import { AlunoRepository } from 'src/aluno/aluno.repository';
+import { startOfWeek, endOfWeek } from 'date-fns';
 
 @Injectable()
 export class ReservaService {
@@ -78,4 +79,20 @@ export class ReservaService {
   ): Promise<Reserva[]> {
     return this.reservaRepository.findReservas(professorId, turmaId);
   }
+
+async findReservasPorAlunoSemana(alunoId: number): Promise<Reserva[]> {
+  // Recuperar a data de início e fim da semana
+  const inicioDaSemana = startOfWeek(new Date(), { weekStartsOn: 0 }); // Domingo
+  const fimDaSemana = endOfWeek(new Date(), { weekStartsOn: 0 }); // Sábado
+
+  // Buscar reservas através do repositório
+  const reservas = await this.reservaRepository.findReservasPorAluno(
+    alunoId,
+    inicioDaSemana,
+    fimDaSemana,
+  );
+
+  return reservas;
+}
+
 }

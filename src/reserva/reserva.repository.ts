@@ -322,4 +322,48 @@ export class ReservaRepository {
 
     return reserva;
   }
+
+  async findReservasPorAluno(
+    alunoId: number,
+    inicioDaSemana: Date,
+    fimDaSemana: Date,
+  ): Promise<Reserva[]> {
+    // Gera o array de dias no formato 'YYYY-MM-DD'
+    const diasDaSemana = this.gerarArrayDias(inicioDaSemana, fimDaSemana);
+  
+    const reservas = await this.reservaRepository
+      .createQueryBuilder('reserva')
+      .leftJoinAndSelect('reserva.turma', 'turma')
+      .leftJoinAndSelect('turma.alunos', 'aluno') // Junta a tabela de alunos
+      .leftJoinAndSelect('reserva.sala', 'sala') // Junta a tabela de salas
+      .where('aluno.aluno_id = :alunoId', { alunoId }) // Filtra pelo ID do aluno
+      .andWhere(
+        diasDaSemana.map((dia, index) => `reserva.dias_reservados LIKE :dia${index}`).join(' OR '),
+        diasDaSemana.reduce((params, dia, index) => {
+          params[`dia${index}`] = `%${dia}%`;
+          return params;
+        }, {}),
+      )
+      .orderBy('reserva.dias_reservados') // Ordena por dia
+      .addOrderBy('reserva.hora_inicio') // Ordena por horário de início
+      .getMany();
+  
+    return reservas;
+  }
+  
+  
+  // Função auxiliar para gerar array de dias no formato 'YYYY-MM-DD'
+  private gerarArrayDias(inicio: Date, fim: Date): string[] {
+    const dias: string[] = [];
+    let atual = new Date(inicio); // Cria um novo objeto para evitar mutações
+  
+    while (atual <= fim) {
+      dias.push(atual.toISOString().split('T')[0]); // Adiciona a data formatada
+      atual.setDate(atual.getDate() + 1); // Incrementa o dia
+    }
+  
+    return dias;
+  }
+  
+  
 }

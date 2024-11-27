@@ -95,4 +95,18 @@ export class ReservaController {
   async remove(@Param('id') id: number): Promise<void> {
     return this.reservaService.remove(id);  // Usando o service
   }
+
+  @Get('aluno/:alunoId')
+@ApiResponse({
+  status: 200,
+  description: 'Reservas do aluno para a semana.',
+  type: [Reserva],
+})
+@ApiResponse({ status: 404, description: 'Aluno não encontrado ou sem reservas.' })
+async getReservasPorAlunoSemana(
+  @Param('alunoId') alunoId: number,
+): Promise<Reserva[]> {
+  return this.reservaService.findReservasPorAlunoSemana(alunoId);
+}
+
 }
