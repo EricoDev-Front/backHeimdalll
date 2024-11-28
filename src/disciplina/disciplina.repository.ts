@@ -35,14 +35,11 @@ export class DisciplinaRepository {
     return this.disciplinaRepository.save(newDisciplina);
   }
 
-    async findAll(): Promise<Disciplina[]> {
-      return this.disciplinaRepository.find({
-        relations: ['curso'], // Inclui a relação com o curso
-      });
-    }
-
   async findOne(id: number): Promise<Disciplina> {
-    return this.disciplinaRepository.findOne({ where: { disciplina_id: id } });
+    return this.disciplinaRepository.findOne({
+      where: { disciplina_id: id },
+      relations: ['curso'], // Inclui a relação com o curso
+    });
   }
 
   async update(id: number, updateDisciplinaDto: UpdateDisciplinaDto): Promise<Disciplina> {
