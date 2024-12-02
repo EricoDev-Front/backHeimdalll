@@ -10,6 +10,7 @@ import {
   UseGuards,
   HttpException,
   HttpStatus,
+  BadRequestException,
 } from '@nestjs/common';
 import { AlunoService } from './aluno.service';
 import { CreateAlunoDto } from './dto/create-aluno.dto';
@@ -19,16 +20,16 @@ import { Aluno } from './entities/aluno.entity';
 import { JwtAuthGuard } from 'src/auth/jwt.auth.guard';
 import { RolesGuard } from 'src/auth/roles.guard';
 import { Roles } from 'src/auth/roles.decorator';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @ApiTags('alunos')
 @ApiBearerAuth()
 @Controller('aluno')
-@UseGuards(JwtAuthGuard, RolesGuard) // Usa o JwtAuthGuard e o RolesGuard para todas as rotas
 export class AlunoController {
-  constructor(private readonly alunoService: AlunoService) {}
+  constructor(private readonly alunoService: AlunoService) { }
 
   @Post()
-  @UseGuards()
   @ApiResponse({
     status: 201,
     description: 'Aluno criado com sucesso.',
@@ -38,8 +39,24 @@ export class AlunoController {
     status: 400,
     description: 'Erro de validação. Email já cadastrado.',
   })
-  async create(@Body() createAlunoDto: CreateAlunoDto): Promise<Aluno> {
-    return this.alunoService.create(createAlunoDto);
+  async initiateRegistration(@Body() createAlunoDto: CreateAlunoDto): Promise<string> {
+    try {
+      return await this.alunoService.initiateRegistration(createAlunoDto);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
+
+  @Post('complete-registration')
+  async completeRegistration(
+    @Body('email') email: string,
+    @Body('code') code: string,
+  ): Promise<string> {
+    try {
+      return await this.alunoService.completeRegistration(email, code);
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
   }
 
   @Get()

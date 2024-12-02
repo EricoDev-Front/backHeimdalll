@@ -1,5 +1,6 @@
 // src/aluno/aluno.module.ts
 import { Module, forwardRef } from '@nestjs/common';
+import { CacheModule } from '@nestjs/cache-manager';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Aluno } from './entities/aluno.entity';
 import { AlunoService } from './aluno.service';

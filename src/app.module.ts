@@ -21,6 +21,7 @@ import { Validacao } from './validacao/entities/validacao.entity';
 import { AlunoModule } from './aluno/aluno.module';
 import { AuthModule } from './auth/auth.module';
 import { SuporteModule } from './suporte/suporte.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -33,6 +34,11 @@ import { SuporteModule } from './suporte/suporte.module';
       database: 'heimdall',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
+    }),
+    CacheModule.register({
+      isGlobal: true, // Torna o cache acessível globalmente
+      ttl: 3600, // Tempo padrão para expiração (em segundos)
+      max: 100, // Limite de itens no cache
     }),
     SalaModule,
     ProfessorModule,

@@ -6,11 +6,13 @@ import { ProfessorService } from './professor.service';
 import { ProfessorController } from './professor.controller';
 import { ProfessorRepository } from './professor.repository';
 import { AuthModule } from '../auth/auth.module';
+import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Professor]),
     forwardRef(() => AuthModule),
+    MailModule
   ],
   controllers: [ProfessorController],
   providers: [ProfessorService, ProfessorRepository],
