@@ -12,7 +12,7 @@ export class ProfessorController {
 
   @Post()
   @ApiResponse({ status: 201, description: 'Professor criado com sucesso.' })
-  async create(@Body() createProfessorDto: CreateProfessorDto): Promise<string> {
+  async create(@Body() createProfessorDto: CreateProfessorDto): Promise<{message: string}> {
     try {
       return await this.professorService.create(createProfessorDto);
     } catch (error) {
@@ -22,7 +22,7 @@ export class ProfessorController {
 
   @Post('complete-registration')
   @ApiResponse({ status: 200, description: 'Registro concluído com sucesso.' })
-  async completeRegistration(@Body('email') email: string, @Body('code') code: string): Promise<string> {
+  async completeRegistration(@Body('email') email: string, @Body('code') code: string): Promise<{message: string}> {
     try {
       return await this.professorService.completeRegistration(email, code);
     } catch (error) {

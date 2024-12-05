@@ -31,7 +31,7 @@ export class AlunoService {
   }
 
   // Inicia o processo de registro
-  async initiateRegistration(createAlunoDto: CreateAlunoDto): Promise<string> {
+  async initiateRegistration(createAlunoDto: CreateAlunoDto): Promise<{message: string}> {
     console.log('Iniciando registro para:', createAlunoDto.email);
     const existingAluno = await this.alunoRepository.findByEmail(createAlunoDto.email);
     console.log('Aluno encontrado no banco:', existingAluno);
@@ -62,11 +62,11 @@ export class AlunoService {
 
     console.log(`Código de verificação gerado: ${verificationCode}`);
 
-    return 'Código de verificação enviado para o e-mail';
+    return {message: 'Código de verificação enviado para o e-mail'};
   }
 
   // Verifica o código e cria o aluno
-  async completeRegistration(email: string, code: string): Promise<string> {
+  async completeRegistration(email: string, code: string): Promise<{message: string}> {
     const cachedData = await this.getVerificationData(email);
 
     console.log(`Dados do cache para ${email}:`, cachedData);
@@ -81,7 +81,7 @@ export class AlunoService {
     await this.alunoRepository.createAluno({ ...alunoData, senha });
     await this.removeVerificationData(email);
 
-    return 'Registro concluído com sucesso';
+    return {message: 'Registro concluído com sucesso'};
   }
 
   // Salva dados de verificação no cache

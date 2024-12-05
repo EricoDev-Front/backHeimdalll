@@ -39,7 +39,7 @@ export class AlunoController {
     status: 400,
     description: 'Erro de validação. Email já cadastrado.',
   })
-  async initiateRegistration(@Body() createAlunoDto: CreateAlunoDto): Promise<string> {
+  async initiateRegistration(@Body() createAlunoDto: CreateAlunoDto): Promise<{message: string}> {
     try {
       return await this.alunoService.initiateRegistration(createAlunoDto);
     } catch (error) {
@@ -51,7 +51,7 @@ export class AlunoController {
   async completeRegistration(
     @Body('email') email: string,
     @Body('code') code: string,
-  ): Promise<string> {
+  ): Promise<{message: string}> {
     try {
       return await this.alunoService.completeRegistration(email, code);
     } catch (error) {

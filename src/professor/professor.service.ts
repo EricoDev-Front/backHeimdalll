@@ -31,7 +31,7 @@ export class ProfessorService {
   }
 
   // Criação do professor com verificação por e-mail
-  async create(createProfessorDto: CreateProfessorDto): Promise<string> {
+  async create(createProfessorDto: CreateProfessorDto): Promise<{message: string}> {
     const existingProfessor = await this.professorRepository.findByEmail(createProfessorDto.email);
     if (existingProfessor) {
       throw new BadRequestException('Email já cadastrado');
@@ -58,11 +58,11 @@ export class ProfessorService {
       `Seu código de verificação é: ${verificationCode}`,
     );
 
-    return 'Código de verificação enviado para o e-mail';
+    return {message: 'Código de verificação enviado para o e-mail'};
   }
 
   // Verificar o código de verificação e concluir o cadastro
-  async completeRegistration(email: string, code: string): Promise<string> {
+  async completeRegistration(email: string, code: string): Promise<{message: string}> {
     const cachedData = await this.getVerificationData(email);
 
     if (!cachedData || cachedData.verificationCode !== code) {
@@ -76,7 +76,7 @@ export class ProfessorService {
     // Remover dados de verificação do cache
     await this.removeVerificationData(email);
 
-    return 'Registro concluído com sucesso';
+    return {message: 'Registro concluído com sucesso'};
   }
 
   // Gerar código de verificação (6 dígitos)
